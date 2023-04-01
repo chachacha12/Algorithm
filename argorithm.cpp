@@ -1,29 +1,43 @@
 #include <iostream>
-using namespace std;
+#include <math.h>
+#include <algorithm>
 
 
-int arr[10];
-int a,b,c;
+using namespace std; 
+
+int arr[20] ={0};
 
 int main(){
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    cin>>a>>b>>c;
+    int n;
+    int six_nine=0;
+    int other=0;
+
+    cin>>n;
     
-    ///10으로 나눈 나머지를 구하면 일의 자리 수를 알 수 있음
-    //그 후 sum값은 10씩 나눠주면 모든 자릿수의 숫자값을 확인가능
-    int sum = a*b*c;
-
-    while(sum>0){
-        int n = sum%10;
-        arr[n]++;
-        sum/=10;
+    
+    while(n>0){
+        arr[n%10]++;
+        n/=10;
+    }
+    
+    for(int i=0 ;i<10; i++){
+        if(i==6 || i==9){
+        }else{
+            if(other < arr[i]){
+                other=arr[i];
+            }
+        }
     }
 
-    for(auto c: arr){
-        cout<<c<<'\n';
-    }
+    six_nine = (arr[6]+arr[9]+1)/2;
+    //six_nine += (arr[6]+arr[9])%2;
+    
+    other = max(other,six_nine);
+    cout<<other;
+
 
     return 0;
 }
