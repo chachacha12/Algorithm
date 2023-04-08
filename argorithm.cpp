@@ -5,37 +5,39 @@
 using namespace std; 
 
 
-int arr[10] ={0};
+int arr[2000001] ={0}; //숫자값
+int brr[100001] ={0}; //index값
 
 int main(){
     ios::sync_with_stdio(0);
     cin.tie(0);
 
+    int index;
+    int sum=0;
+
+    cin >> index;
+
     int n;
-
-    cin >>n;
-
-    while(n>0){
-        arr[n%10]++;
-        n /= 10; 
+   for(int i=0; i<index; i++){
+        cin >>n;
+        brr[i] = n;
+        arr[n]++;
     }
 
-    int entire=0;
-
-    for(int i=0; i<10; i++){
-        if(i==6 ||i==9){
-
-        }else{
-            if(arr[i] > entire){
-                entire = arr[i];
-            }
+    int x;
+    cin >>x;
+    
+    for(int i=0; i<index; i++){
+        if(x-brr[i] >0 &&  arr[x-brr[i]] !=0 ){
+            sum++; 
         }
     }
 
+    if(sum !=0){
+        sum/=2;
+    }
 
-    int six_nine = (arr[6]+arr[9]+1)/2;
-
-    cout << (max(entire, six_nine));
+    cout<<sum;
 
 
     return 0;
