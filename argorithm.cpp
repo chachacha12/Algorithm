@@ -1,41 +1,96 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <list>
 
-/*
+using namespace std; 
 
-//연결리스트의 쓰임.
-1. 임의의 위치의 데이터를 추가하거나 삭제하는 작업이 많을때 
-2. 메모장, 텍스트에디터 등에서 사용함 - 커서 위치에서 글자 추가하거나 삭제하는 작업 많기에.
+//연결리스트가 쓰이는 문제는 크게 응용해서 낼만한게 없고 이 문제처럼 원소를 돌아다니면서 이동하다가 추가나 삭제가 필요한 문제임.
+//만약 n이 5000정도로 작으면 O(n제곱)으로 풀어도되어서 우리에게 더 익숙한 vector로 풀어도됨. 
 
-* 연결리스트의 구현은 구조체나 클래스를 만들어서 NODE 객체를 만드는 방법으로 주로함.. 근데 코테에선 STL list이용하면 
-이중연결리스트라서 그냥 이거 사용하면됨. 
-근데 간혹가다가 STL 허용안되는 코테를 위해서 야매 연결리스트 구현을 알아봄. (코테에선 STL 되어서 그닥 중요x일 가능성이 크긴함)
+//백준 1406번 에디터 - STL 이용풀이
 
---> dat[i], nxt[i], pre[i] 라는 3개의 배열을 만들어서 사용한것이 야매연결리스트.... but 메모리누수때문에 실무에선 사용못하고 코테에서만 가능
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
---------------- STL 이용법-------------
+    list<char> L;
+    string s;
+    int n;
+    char order; 
+    char letter;
+    
+    cin>> s;
 
-list<int> L = {1,2};  // 1 2
-list<int>::iterator t = L.begin();  //t는 1을 가리키는중
-L.push_front(10); // 10 1 2
-cout << *t << '\n'; //t가 가리키는 값 1을 출력
-L.push_back(5); // 10 1 2 5
-L.insert(t,6); // t가 가리키는 곳 앞에 6을 삽입. 10 6 1 2 5
-t++; // t를 1칸 앞으로 전진, 현재 t가 가리키는 값은 2
-t= L.erase(t); // t가 가리키는 값을 제거, 그 다음 원소인 5의 위치를 반환함
-                // 10 6 1 5, t가 가리키는 값은 5 
+    for(auto c: s){
+        L.push_back(c);
+    }
 
-cout<< *t << '\n'; //5
+    //리스트 젤 끝에 커서를 둠, 단 지정할 수 없게 빈공간을 가리키므로 t--한번해주면
+    //그때 젤 마지막 값 가리킬거임
+    list<char>::iterator t = L.end(); 
+    
+    t--;
 
-// 연결리스트 L에 저장된 모든 데이터값 출력
-for(auto i : L) cout << i << ' ';  
-cout<< '\n';
+    L.push_front('a'); //리스트 맨 앞에 더미노드를 하나더 둠
+    
+    cin>>n;
 
-// 연결리스트 L에 저장된 모든 데이터값 출력
-for(list<int>::iterator it = L.begin(); it != L.end(); it++){
-    cout << *it << ' ' ;
+    for(int i=0; i <n; i++){
+        cin>>order;
+        if(order == 'L'){
+            if(t != L.begin() )  //젤 처음값이 아니라면
+                t--;
+
+        }else if(order =='D'){
+            t++;
+            if(t == L.end() )  //젤 마지막의 다음값이라면
+            {
+                t--;
+            }
+                
+
+        }else if(order == 'B'){
+            //맨 뒷자리가 아니라면
+            t++;
+            if(t !=L.end()){
+                t--;
+                //젤 처음의 더미노드였다면 삭제명령 무시
+                if(t == L.begin()){
+
+                }else{ 
+                     t = L.erase(t);
+                     t--;
+                }
+            }else{
+                t--;
+                t--;
+                L.pop_back(); //마지막에 있는 데이터를 삭제함
+            }
+
+
+        }else if(order == 'P'){  //삽입하기 명령 - 맨뒤에서 삽입만 예외처리해주면됨
+            cin >>letter;
+            
+            t++;
+            if(t == L.end()){
+                t--;
+                L.push_back(letter);
+                t++;
+            }else{
+                L.insert(t, letter);
+                t--;
+            }
+            
+        }       
+    }
+    L.pop_front();  //L의 맨앞에 넣었던 더미노드뺌
+
+    for(auto c: L){
+        cout << c;
+    }
+    
+
+    return 0;
 }
-
-
-
-
-*/
 
