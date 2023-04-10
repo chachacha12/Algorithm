@@ -1,44 +1,41 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
 
-using namespace std; 
+/*
 
+//연결리스트의 쓰임.
+1. 임의의 위치의 데이터를 추가하거나 삭제하는 작업이 많을때 
+2. 메모장, 텍스트에디터 등에서 사용함 - 커서 위치에서 글자 추가하거나 삭제하는 작업 많기에.
 
-int arr[2000001] ={0}; //숫자값
-int brr[100001] ={0}; //index값
+* 연결리스트의 구현은 구조체나 클래스를 만들어서 NODE 객체를 만드는 방법으로 주로함.. 근데 코테에선 STL list이용하면 
+이중연결리스트라서 그냥 이거 사용하면됨. 
+근데 간혹가다가 STL 허용안되는 코테를 위해서 야매 연결리스트 구현을 알아봄. (코테에선 STL 되어서 그닥 중요x일 가능성이 크긴함)
 
-int main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+--> dat[i], nxt[i], pre[i] 라는 3개의 배열을 만들어서 사용한것이 야매연결리스트.... but 메모리누수때문에 실무에선 사용못하고 코테에서만 가능
 
-    int index;
-    int sum=0;
+--------------- STL 이용법-------------
 
-    cin >> index;
+list<int> L = {1,2};  // 1 2
+list<int>::iterator t = L.begin();  //t는 1을 가리키는중
+L.push_front(10); // 10 1 2
+cout << *t << '\n'; //t가 가리키는 값 1을 출력
+L.push_back(5); // 10 1 2 5
+L.insert(t,6); // t가 가리키는 곳 앞에 6을 삽입. 10 6 1 2 5
+t++; // t를 1칸 앞으로 전진, 현재 t가 가리키는 값은 2
+t= L.erase(t); // t가 가리키는 값을 제거, 그 다음 원소인 5의 위치를 반환함
+                // 10 6 1 5, t가 가리키는 값은 5 
 
-    int n;
-   for(int i=0; i<index; i++){
-        cin >>n;
-        brr[i] = n;
-        arr[n]++;
-    }
+cout<< *t << '\n'; //5
 
-    int x;
-    cin >>x;
-    
-    for(int i=0; i<index; i++){
-        if(x-brr[i] >0 &&  arr[x-brr[i]] !=0 ){
-            sum++; 
-        }
-    }
+// 연결리스트 L에 저장된 모든 데이터값 출력
+for(auto i : L) cout << i << ' ';  
+cout<< '\n';
 
-    if(sum !=0){
-        sum/=2;
-    }
-
-    cout<<sum;
-
-
-    return 0;
+// 연결리스트 L에 저장된 모든 데이터값 출력
+for(list<int>::iterator it = L.begin(); it != L.end(); it++){
+    cout << *it << ' ' ;
 }
+
+
+
+
+*/
+
