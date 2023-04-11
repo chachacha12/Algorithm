@@ -1,60 +1,52 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <list>
-
-using namespace std; 
-
-//연결리스트 문제
-
-int main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-
-    int n;
-    string s;
-
-    cin>>n;
-
-    while(n--){
-        cin >> s;
-        
-        list<char> L;
-        list<char>::iterator it = L.end();
-
-        for(auto c: s){
+/*
 
 
 
-            if(c =='<'){
-                if(it != L.begin()){
-                    it--;
-                }
-                    
-            }else if(c=='>'){
-                if(it != L.end()){
-                    it++;
-                }
+바킹독 팁
 
-            }else if(c=='-'){
-                if(it != L.begin()){
-                    it--;
-                    it = L.erase(it);
-                }
+-기초코드작성요령 중- 
 
-            }else{  //그냥 문자 비밀번호 칠때
-                L.insert(it, c);
-            }
-        }
+1.
 
-        //정답을 출력
-        for(auto c: L){
-            cout<<c;
-        }
-         cout<<'\n';  //이것도 중요!! 안해주면 틀림 
-    }
+String s;
+getline(cin, s);
+Cout << s; 
+
+공백이 있는 문자열을 입력으로 받을땐 이런식으로 getline 쓰기
 
 
-    return 0;
-}
+2.
+Scanf, printf 를 쓰는게 아니고 cin, cout을 쓰는 거라면
+입출력으로 인한 시간초과를 막기위해 
 
+- ios::sync_with_stdio(0), cin.tie(0)
+
+이 두 명령을 실행시켜야 함. 이걸 안하면 입출력 양 많을때 시간초과 날 수 있음
+
+3.
+출력 마지막에 공백이나 줄바꿈 있어도 상관없음 
+
+4.
+디버거는 굳이 사용하지 않아도 된다.
+
+—————————————————
+
+- 배열 중 - 
+
+배열의 값들을 모두 동일한 값으로 초기화 시키고 싶을때
+
+-> fill함수 이용
+
+Int a[21];
+Int b[21][21];
+
+fill(a, a+21, 0);
+
+for(int I=0; I<21; I++)
+	fill( b[I], b[I]+21, 0); 
+
+
+
+
+
+*/
