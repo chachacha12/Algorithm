@@ -8,48 +8,30 @@ using namespace std;
 
 //스택 문제
 
+
 int main(){
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    int n;
     stack<int> st;
-    int num;
+    int n;
+    int result=0;
 
-    cin>>n; 
+    cin>>n;
 
     while(n--){
-        string s;
-        cin>>s;
-        if(s=="push"){
-            cin>>num;
+        int num;
+        cin>> num;
+        if(num == 0){
+            result-= st.top();
+            st.pop();
+        }else{
             st.push(num);
-
-        }else if(s=="pop"){
-            if(st.empty()){
-                cout << -1 << '\n';
-            }else{
-                cout<< st.top() << '\n';
-                st.pop();
-            }
-
-        }else if(s=="size"){
-            cout<<st.size()<<'\n';
-
-        }else if(s=="empty"){
-            if(st.empty()){
-                cout << 1 << '\n';
-            }else{
-                cout << 0 << '\n';
-            }
-        }else if(s=="top"){
-            if(st.empty()){
-                cout << -1 << '\n';
-            }else{
-                cout<< st.top() << '\n';
-            }
+            result+=num;
         }
     }
+
+    cout<<result;
     
     return 0;
 }
