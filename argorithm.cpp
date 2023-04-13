@@ -1,30 +1,55 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <list>
+#include <stack> 
 
-/*
+using namespace std; 
 
-스택
+//스택 문제
 
-스택의 성질
-1. 원소 추가, 제거가 O(1)
-2. 제일 상단 원소 확인이 O(1)
-3. 제일 상단이 아닌 나머지 원소들의 확인/변경은 원칙적으로 불가능함 (배열을 만들어서 스택을 구현하면 야매로 가능하긴하지만 거의 안씀)
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-- 직접 구현
-스택은 배열로 구현가능함
+    int n;
+    stack<int> st;
+    int num;
 
-- STL을 이용한 스택 구현
-stack<int> s;
-s.push(10); // 10
-s.push(20);// 10 20
-s.push(30);  // 10 20 30
-cout<<s.size()<<'\n'; //3
-if(s.empty())...
+    cin>>n; 
 
-s.pop(); //10 20
-cout<<s.top()<<'\n'; // 20
-s.pop(); //10
-cout<<s.top()<<'\n'; // 10
+    while(n--){
+        string s;
+        cin>>s;
+        if(s=="push"){
+            cin>>num;
+            st.push(num);
 
-만약 스택이 비어있을때 pop이나 top을 하면 런타임에러발생함. 그래서 비었는지 확인필요한듯!!!
+        }else if(s=="pop"){
+            if(st.empty()){
+                cout << -1 << '\n';
+            }else{
+                cout<< st.top() << '\n';
+                st.pop();
+            }
 
+        }else if(s=="size"){
+            cout<<st.size()<<'\n';
 
-*/
+        }else if(s=="empty"){
+            if(st.empty()){
+                cout << 1 << '\n';
+            }else{
+                cout << 0 << '\n';
+            }
+        }else if(s=="top"){
+            if(st.empty()){
+                cout << -1 << '\n';
+            }else{
+                cout<< st.top() << '\n';
+            }
+        }
+    }
+    
+    return 0;
+}
