@@ -1,22 +1,69 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <list>
+#include <stack> 
+#include <queue>
 
-/*
+using namespace std; 
 
-큐
-- STL queue는 코테에서 많이 사용함. 
-
-queue<int> Q;
-
-Q.push(10); //10
-Q.push(20); //10 20
-Q.push(30); //10 20 30
-cout<< Q.size() <<'\n'; //3
-if(Q.empty()) cout<< "Q is not empty";
-Q.pop(); //20 30
-cout << Q.front() << '\n'; //20
-cout << Q.back() << '\n'; //30
-Q.push(40); //20 30 40
-Q.pop(); //30 40
-cout<< Q.front() <<'\n'; //30
+//큐 문제
 
 
-*/
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    queue<int> Q;
+    int n;
+    cin>> n;
+    
+
+    while(n--){
+        string s;
+        cin>>s;
+
+        if(s=="push"){
+            int x;
+            cin>>x;
+            Q.push(x);
+
+        }else if(s=="pop"){
+            if(!Q.empty()){
+                cout<<Q.front()<<'\n';
+                Q.pop();
+            }else{
+                cout<<-1<<'\n';
+            
+            }
+
+        }else if(s=="size"){
+            cout<<Q.size()<<'\n';
+
+        }else if(s=="empty"){
+            if(Q.empty()){
+                 cout<<1<<'\n';
+            }else{
+                cout<<0<<'\n';
+            }
+
+        }else if(s=="front"){
+            if(!Q.empty()){
+                cout<<Q.front()<<'\n';
+            }else{
+                cout<<-1<<'\n';
+            }
+
+        }else if(s=="back"){
+            if(!Q.empty()){
+                cout<<Q.back()<<'\n';
+            }else{
+                cout<<-1<<'\n';
+            }
+        }
+
+    }
+
+    return 0;
+}
+
