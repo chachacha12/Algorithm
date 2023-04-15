@@ -1,12 +1,49 @@
-/*
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <list>
+#include <stack> 
+#include <queue>
 
-덱 (deque)
--덱은 앞 뒤에서 다 원소를 추가하거나 삭제가 가능함
--원칙적으로는 덱도 젤 앞과 뒤의 원소만 확인이 가능하고 중간에 원소들은 확인불가인데,
-STL deque에서는 인덱스로 모든 원소에 접근이 가능함 (STL 스택이나 큐는 이거 안됐음)
-그리고 STL deque은 특이하게  double ended queue보단 vector와 좀 유사한 느낌인데
-
-* 앞쪽과 뒤쪽에서 모두 원소의 추가와 제거가 필요하면 STL deque쓰면 되고, 굳이 앞쪽에서의 추가 제거 필요없고 배열같은 느낌으로 쓰고 싶으면 STL vector쓰면됨.
+using namespace std; 
 
 
-*/
+const int MX = 1000005;
+int dat[2*MX+1];
+int head = MX, tail = MX;
+
+
+void push_front(int x){
+    dat[--head] = x;
+    
+}
+
+void push_back(int x){
+    dat[tail++] = x;
+}
+
+void pop_front(){
+    head++;  
+}
+
+void pop_back(){
+    tail--;
+}
+
+int front(){
+    return dat[head];
+}
+
+int back(){
+    return dat[tail-1];
+}
+
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    
+    
+    return 0;
+}
