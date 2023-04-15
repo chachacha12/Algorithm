@@ -16,54 +16,22 @@ int main(){
 
     queue<int> Q;
     int n;
-    cin>> n;
+    cin>>n;
     
 
-    while(n--){
-        string s;
-        cin>>s;
-
-        if(s=="push"){
-            int x;
-            cin>>x;
-            Q.push(x);
-
-        }else if(s=="pop"){
-            if(!Q.empty()){
-                cout<<Q.front()<<'\n';
-                Q.pop();
-            }else{
-                cout<<-1<<'\n';
-            
-            }
-
-        }else if(s=="size"){
-            cout<<Q.size()<<'\n';
-
-        }else if(s=="empty"){
-            if(Q.empty()){
-                 cout<<1<<'\n';
-            }else{
-                cout<<0<<'\n';
-            }
-
-        }else if(s=="front"){
-            if(!Q.empty()){
-                cout<<Q.front()<<'\n';
-            }else{
-                cout<<-1<<'\n';
-            }
-
-        }else if(s=="back"){
-            if(!Q.empty()){
-                cout<<Q.back()<<'\n';
-            }else{
-                cout<<-1<<'\n';
-            }
-        }
-
+    for(int i=1; i<=n; i++){
+        Q.push(i);
     }
 
+    while(Q.size() != 1){
+        Q.pop();
+        int a = Q.front();
+        Q.push( a) ;
+        Q.pop();
+    }
+     cout << Q.front();
+    
+    
     return 0;
 }
 
