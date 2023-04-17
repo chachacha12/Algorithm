@@ -1,49 +1,18 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <list>
-#include <stack> 
-#include <queue>
-
-using namespace std; 
+/*
 
 
-const int MX = 1000005;
-int dat[2*MX+1];
-int head = MX, tail = MX;
+스택의 활용
+
+ - 괄호쌍 수식 :  (), {} 등의 괄호가 포함된 수식이 옳은 수식인지 판별하는 문제 등
+
+1. 여는 괄호가 나오면 스택에 추가
+2. 닫는 괄호가 나왔을 경우,
+    2-1 스택이 비어있으면 올바르지 않은 괄호쌍
+    2-2 스택의 top이 짝이 맞지 않는 괄호일 경우 올바르지 않은 괄호쌍
+    2-3 스택의 top이 짝이 맞는 괄호일 경우 pop
+
+3. 모든 과정을 끝낸 후 스택에 괄호가 남아았으면 올바르지 않은 괄호쌍, 남아있지 않으면 올바른 괄호쌍
 
 
-void push_front(int x){
-    dat[--head] = x;
-    
-}
 
-void push_back(int x){
-    dat[tail++] = x;
-}
-
-void pop_front(){
-    head++;  
-}
-
-void pop_back(){
-    tail--;
-}
-
-int front(){
-    return dat[head];
-}
-
-int back(){
-    return dat[tail-1];
-}
-
-
-int main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-
-    
-    
-    return 0;
-}
+*/
