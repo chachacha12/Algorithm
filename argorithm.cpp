@@ -1,18 +1,66 @@
-/*
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <list>
+#include <stack> 
+#include <queue>
 
-
-스택의 활용
-
- - 괄호쌍 수식 :  (), {} 등의 괄호가 포함된 수식이 옳은 수식인지 판별하는 문제 등
-
-1. 여는 괄호가 나오면 스택에 추가
-2. 닫는 괄호가 나왔을 경우,
-    2-1 스택이 비어있으면 올바르지 않은 괄호쌍
-    2-2 스택의 top이 짝이 맞지 않는 괄호일 경우 올바르지 않은 괄호쌍
-    2-3 스택의 top이 짝이 맞는 괄호일 경우 pop
-
-3. 모든 과정을 끝낸 후 스택에 괄호가 남아았으면 올바르지 않은 괄호쌍, 남아있지 않으면 올바른 괄호쌍
+using namespace std; 
 
 
 
-*/
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+   while(1){
+        stack<char> st;
+        string s;
+        getline(cin, s);   //공백이 있는 문자열을 받을때 사용함 
+
+        if(s=="."){
+            break;
+        }
+        
+        
+        for(auto c: s){
+            if(c=='('){
+                st.push(c);
+            }else if(c=='['){
+                st.push(c);
+            }else if(c==')'){
+                if(st.empty() || st.top() !='(' ){
+                    cout<<"no"<<'\n';
+                    break;
+                }else{
+                    st.pop();
+                }
+                
+            }else if(c==']'){
+                if(st.empty() || st.top() !='[' ){
+                    cout<<"no"<<'\n';
+                    break;
+                }else{
+                    st.pop();    
+                }
+            }else if(c=='.'){
+                if(st.empty()){
+                    cout<<"yes"<<'\n';
+                    break;
+                }else{
+                    cout<<"no"<<'\n';
+                    break;
+                }
+            }
+        }
+
+
+   }
+
+
+    
+
+    
+    
+    return 0;
+}
