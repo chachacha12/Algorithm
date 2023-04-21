@@ -1,58 +1,44 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <list>
-#include <stack> 
-#include <queue>
+/*
 
-using namespace std; 
+BFS란? - 다차원 배열에서 각 칸을 방문할떄 너비를 우선으로 방문하는 알고리즘
+
+원래 BFS는 그래프 자료구조에서..모든 노드를 방문할때 쓰는 알고리즘임
 
 
-stack<char> st;
+BFS 진행과정
+----------------------------------------------
+1. 시작하는 칸을 큐에 넣고 방문했다는 표시를 남김
+2. 큐에서 원소를 꺼내어 그 칸에 상하좌우로 인접한 칸에 대해 3번을 진행
+3. 해당 칸을 이전에 방문했다면 아무것도 하지않고, 처음으로 방문했다면 방문했다는 표시를 남기고
+해당 칸을 큐에 삽입
+4. 큐가 빌때까지 2번을 반복
+
+    모든 칸이 큐에 1번씩 들어가므로 시간복잡도는 칸이 N개일때 O(N) 
+
+
+--------------------------------------------------
+
+pair 
+BFS 구현전에 코드에서 쓰이게 될 STL 자료구조
+
+pair를 쓰면 2개의 자료구조를 묶어서 쓸 수 있음
+
+pair<int,int> t1 = make_pair(10,13);
+pair<int,int> t2 = {4,6};  //c++ 11 이상부터 가능
+
+cout<< t2.first << t2.second 
+
+if(t2 <t1) cout << "t2 > t3";   //pair는 대소관계가 정해져있음. 앞에 원소를 먼저 비교하고
+뒤에 원소 비교함
+
+---> BFS 구현할때 큐에 좌표를 넣어야 하는데 그때 pair씀
+
+--------------------------------------------------
+
+BFS 코드
+
+->정석적인 코드 확인했음. 달달외우기
 
 
 
-/// (총 막대의 갯수 + 총 관통한 횟수) 계산을 하면 잘린 총 막대의 갯수..즉, 답이 나올듯
-
-int main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-
-    string s;
-    cin>>s;
-
-    int sum=0;  //레이저가 막대들을 총 몇번을 관통하는지 셈
-    int stick_num=0;  //총 막대의 갯수
-    bool pop_check = false; // 레이저나와서 pop한 직후인지 나타내는 함수 true면 바로전에 pop한것
-
-    for(auto c: s){ 
-        if(c =='('){
-        //이거일경우 스택에 넣어줌
-            st.push(c);
-            pop_check = false;
-
-        }else if(c==')'){
-        //이거일경우엔 2가지 경우로 나눔.
-        //1. 레이저인경우
-        //2. 닫는 막대기인 경우
-            if(pop_check == false  && st.top() == '('){  //레이저인 경우
-                st.pop();
-                //스택의 크기를 재서 레이저가 몇개의 막대기를 관통하는지 계속 더함
-                sum+=st.size();
-
-                pop_check = true;
-            }else{         //닫는 막대인경우
-                st.pop();
-                stick_num++;    
-            }
-        }
-    }
-
-    cout<< stick_num + sum;
-
-   
-
-    
-    
-    return 0;
-}
+*/
