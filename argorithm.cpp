@@ -10,80 +10,121 @@ using namespace std;
 #define X first 
 #define Y second 
 
-int dist[52][52];
-
-int t;
-int m,n,k;
-
-int sum;
-
-queue<pair<int,int>> Q;
+queue<pair<int,int>> q;
 
 int dx[4] = {1,0,-1,0};
 int dy[4] = {0,1,0,-1};
 
+int n;
 
+int sum, sum2;
 
 int main(){ 
     ios::sync_with_stdio(0);
     cin.tie(0);
 
+    cin >> n;
+    string board[n];
+    int dist[n][n];
 
-    cin>>t;
+    for(int i=0; i<n; i++){
+        fill(dist[i], dist[i]+n, -1);
+    }
 
-    //테스트 케이스 수만큼 진행
-    while(t--){
-        sum = 0; //필요한 지렁이 갯수
-        for(int i=0; i<52; i++){
-             fill(dist[i], dist[i]+52, 0);  //판 초기화
-        }
-       
-        cin>>m>>n>>k;
-        //존재하는 배추갯수만큼 반복
-        while(k--){
-            int x,y;
-            cin>>x>>y;
-            dist[x][y] = 1;
-        }
+    
+    for(int i=0; i<n; i++){
+        cin >>board[i];
+    }
 
-        for(int i=0; i<m;i++){
-            for(int j=0; j<n;j++){
-                if(dist[i][j]==1){
-                    sum++;
-                    Q.push({i,j}); 
-                    dist[i][j] = 0; 
+    //원소를 하나하나 돔 - 적록색약인 사람인경우
+    for(int i=0; i<n;i++){
+        for(int j=0; j<n; j++){
 
-                    while(!Q.empty()){
-                        auto cur = Q.front();
-                        Q.pop();
+            if(dist[i][j]== -1){ //아직 방문안한 곳이라면
+                
+                sum++;
 
+                 dist[i][j] = 0;
+                 q.push({i,j});
+
+                 char c = board[i][j];
+
+                  while(!q.empty()){
+                      auto cur = q.front();
+                      q.pop();
+                
                         for(int i=0;i<4;i++){
                             int x = cur.X + dx[i];
                             int y = cur.Y + dy[i];
 
-                            //범위를 벗어났다면 패스
-                            if(x<0 || x>=m || y <0 || y>=n ) 
-                                continue;
-                            
-                            if(dist[x][y]== 0) //이미 방문했거나 배추가 없는 곳이면 패스
+                            if(x<0 || x>=n || y<0 || y>=n)
                                 continue;
 
-                            Q.push({x,y});
+                            //방문한 곳이거나 문자가 다른거라면 패스
+                            if(dist[x][y] >= 0 || board[x][y] !=  c )
+                                continue;
+
                             dist[x][y] = 0;
+                            q.push({x,y});
                         }
-                    }
-   
                 }
-
             }
         }
-
-        cout<<sum<<'\n';
-
     }
 
+    //dist 다시 초기화
+    for(int i=0; i<n; i++){
+        fill(dist[i], dist[i]+n, -1);
+    }
 
-   
+    for(int i=0; i<n;i++){
+        for(int j=0; j<n; j++){
+            if(board[i][j] == 'R'){
+                board[i][j] = 'G';
+            }
+        }
+    }
+
+    //원소를 하나하나 돔 - 적록색약 아닌경우
+    for(int i=0; i<n;i++){
+        for(int j=0; j<n; j++){
+
+            if(dist[i][j]== -1){ //아직 방문안한 곳이라면
+                
+                sum2++;
+
+                 dist[i][j] = 0;
+                 q.push({i,j});
+
+
+                 char c = board[i][j];
+            
+
+                  while(!q.empty()){
+                      auto cur = q.front();
+                      q.pop();
+                
+                        for(int i=0;i<4;i++){
+                            int x = cur.X + dx[i];
+                            int y = cur.Y + dy[i];
+
+                            if(x<0 || x>=n || y<0 || y>=n)
+                                continue;
+
+                            //방문한 곳이거나 문자가 다른거라면 패스
+                            if(dist[x][y] >= 0 || board[x][y] !=  c )
+                                continue;
+
+                            dist[x][y] = 0;
+                            q.push({x,y});
+                        }
+                }
+            }
+        }
+    }
+
+    cout << sum<<' '<<sum2;
+
    
     return 0;
 }
