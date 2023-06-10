@@ -7,125 +7,98 @@
 #include <queue>
 using namespace std; 
 
-#define X first 
-#define Y second 
+#define X first
+#define T second 
 
-queue<pair<int,int>> q;
+///3차원
+int board[102][102][102];
+int dist[102][102][102];
 
-int dx[4] = {1,0,-1,0};
-int dy[4] = {0,1,0,-1};
+queue<tuple<int,int,int> > q;
 
-int n;
+int dx[6] = {1,0,-1,0,0,0};
+int dy[6] = {0,1,0,-1,0,0};
+int dh[6] = {0,0,0,0,1,-1};
 
-int sum, sum2;
+int m, n, h;
+
+
 
 int main(){ 
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    cin >> n;
-    string board[n];
-    int dist[n][n];
-
-    for(int i=0; i<n; i++){
-        fill(dist[i], dist[i]+n, -1);
-    }
+    cin>> m>>n>>h;
 
     
-    for(int i=0; i<n; i++){
-        cin >>board[i];
-    }
+    ///입력받기
+    for(int floor =0; floor<h; floor++){
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                cin>>board[j][i][floor]; 
 
-    //원소를 하나하나 돔 - 적록색약인 사람인경우
-    for(int i=0; i<n;i++){
-        for(int j=0; j<n; j++){
-
-            if(dist[i][j]== -1){ //아직 방문안한 곳이라면
-                
-                sum++;
-
-                 dist[i][j] = 0;
-                 q.push({i,j});
-
-                 char c = board[i][j];
-
-                  while(!q.empty()){
-                      auto cur = q.front();
-                      q.pop();
-                
-                        for(int i=0;i<4;i++){
-                            int x = cur.X + dx[i];
-                            int y = cur.Y + dy[i];
-
-                            if(x<0 || x>=n || y<0 || y>=n)
-                                continue;
-
-                            //방문한 곳이거나 문자가 다른거라면 패스
-                            if(dist[x][y] >= 0 || board[x][y] !=  c )
-                                continue;
-
-                            dist[x][y] = 0;
-                            q.push({x,y});
-                        }
+                ///여러곳에서 동시에 진행하는 BFS는 입력받을때 큐에 넣어줌
+                if(board[j][i][floor] == 1){
+                    q.push({j, i, floor});
+                    dist[j][i][floor] = 0;
+                }else{
+                    dist[j][i][floor] = -1;
                 }
+                   
             }
         }
     }
 
-    //dist 다시 초기화
-    for(int i=0; i<n; i++){
-        fill(dist[i], dist[i]+n, -1);
-    }
+    ///3차원에서의 BFS 진행
+    while(!q.empty()){
+        auto cur = q.front();
+        q.pop();
 
-    for(int i=0; i<n;i++){
-        for(int j=0; j<n; j++){
-            if(board[i][j] == 'R'){
-                board[i][j] = 'G';
-            }
-        }
-    }
-
-    //원소를 하나하나 돔 - 적록색약 아닌경우
-    for(int i=0; i<n;i++){
-        for(int j=0; j<n; j++){
-
-            if(dist[i][j]== -1){ //아직 방문안한 곳이라면
-                
-                sum2++;
-
-                 dist[i][j] = 0;
-                 q.push({i,j});
-
-
-                 char c = board[i][j];
+        for(int i=0; i<6; i++){
+            int x = get<0>(cur) + dx[i]; 
+            int y = get<1>(cur) + dy[i];
+            int z = get<2>(cur) + dh[i];
             
+            ///범위 벗어날경우
+            if(x<0 || x>=m || y < 0 || y>=n || z <0 || z>=h)
+                continue;
+            
+            ///이미 방문한 곳일경우 or 빈 칸일 경우
+            if(dist[x][y][z]>=0 || board[x][y][z] == -1)
+                continue;
+            
+            ///처음 방문하는 곳인경우
+            dist[x][y][z] = dist[get<0>(cur)][ get<1>(cur)][get<2>(cur)] +1;
+            q.push({x,y,z});
+        }
+    }
+    
+    ///최소날수
+    int mx=0;
 
-                  while(!q.empty()){
-                      auto cur = q.front();
-                      q.pop();
+
+    for(int floor =0; floor<h; floor++){
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
                 
-                        for(int i=0;i<4;i++){
-                            int x = cur.X + dx[i];
-                            int y = cur.Y + dy[i];
-
-                            if(x<0 || x>=n || y<0 || y>=n)
-                                continue;
-
-                            //방문한 곳이거나 문자가 다른거라면 패스
-                            if(dist[x][y] >= 0 || board[x][y] !=  c )
-                                continue;
-
-                            dist[x][y] = 0;
-                            q.push({x,y});
-                        }
+                
+                ///모든 토마토가 익지 못할때
+                if(board[j][i][floor]==0 && dist[j][i][floor] ==-1){
+                     cout<<-1; 
+                     return 0;  
                 }
+
+                if(dist[j][i][floor] > mx ){
+                    mx = dist[j][i][floor];
+                }   
+                   
             }
         }
     }
 
-    cout << sum<<' '<<sum2;
+     cout<<mx;
+    
 
-   
     return 0;
 }
 
