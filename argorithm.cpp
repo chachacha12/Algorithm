@@ -7,97 +7,65 @@
 #include <queue>
 using namespace std; 
 
-#define X first
-#define T second 
 
-///3차원
-int board[102][102][102];
-int dist[102][102][102];
+#define X first 
+#define Y second 
 
-queue<tuple<int,int,int> > q;
+int board[302][302];
+int dist[302][302];
+queue<pair<int,int>> q;
 
-int dx[6] = {1,0,-1,0,0,0};
-int dy[6] = {0,1,0,-1,0,0};
-int dh[6] = {0,0,0,0,1,-1};
-
-int m, n, h;
-
+int t;
+int dx[8] = {-1,-2,-2,-1,1,2,2,1};
+int dy[8] = {2,1,-1,-2,-2,-1,1,2};
 
 
 int main(){ 
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    cin>> m>>n>>h;
 
-    
-    ///입력받기
-    for(int floor =0; floor<h; floor++){
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                cin>>board[j][i][floor]; 
+    cin>>t;
 
-                ///여러곳에서 동시에 진행하는 BFS는 입력받을때 큐에 넣어줌
-                if(board[j][i][floor] == 1){
-                    q.push({j, i, floor});
-                    dist[j][i][floor] = 0;
-                }else{
-                    dist[j][i][floor] = -1;
-                }
-                   
+    while(t--){
+        int length;  //한변의 길이
+        int startx, starty;
+        int endx, endy;
+
+        cin>>length;
+        cin>>startx>>starty;
+        cin>>endx>>endy;
+        
+         for(int i=0; i<length; i++){
+             fill(dist[i], dist[i]+length, -1);
+        }
+
+        q.push({startx, starty});
+        dist[startx][starty] = 0;
+        
+        ///BFS 진행
+        while(!q.empty()){
+            auto cur = q.front();
+            q.pop();
+
+            for(int i=0; i<8; i++){ 
+                int x = cur.X +dx[i];
+                int y = cur.Y +dy[i]; 
+
+                //범위벗어나면 패스
+                if(x<0 || x>=length || y<0|| y>=length )
+                    continue;
+                //이미 방문한 곳이면 패스
+                if(dist[x][y]>=0)
+                    continue;
+                
+                q.push({x,y});
+                dist[x][y] = dist[cur.X][cur.Y] +1;
             }
         }
+
+        cout<<dist[endx][endy]<<"\n";
     }
-
-    ///3차원에서의 BFS 진행
-    while(!q.empty()){
-        auto cur = q.front();
-        q.pop();
-
-        for(int i=0; i<6; i++){
-            int x = get<0>(cur) + dx[i]; 
-            int y = get<1>(cur) + dy[i];
-            int z = get<2>(cur) + dh[i];
-            
-            ///범위 벗어날경우
-            if(x<0 || x>=m || y < 0 || y>=n || z <0 || z>=h)
-                continue;
-            
-            ///이미 방문한 곳일경우 or 빈 칸일 경우
-            if(dist[x][y][z]>=0 || board[x][y][z] == -1)
-                continue;
-            
-            ///처음 방문하는 곳인경우
-            dist[x][y][z] = dist[get<0>(cur)][ get<1>(cur)][get<2>(cur)] +1;
-            q.push({x,y,z});
-        }
-    }
-    
-    ///최소날수
-    int mx=0;
-
-
-    for(int floor =0; floor<h; floor++){
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                
-                
-                ///모든 토마토가 익지 못할때
-                if(board[j][i][floor]==0 && dist[j][i][floor] ==-1){
-                     cout<<-1; 
-                     return 0;  
-                }
-
-                if(dist[j][i][floor] > mx ){
-                    mx = dist[j][i][floor];
-                }   
-                   
-            }
-        }
-    }
-
-     cout<<mx;
-    
 
     return 0;
 }
