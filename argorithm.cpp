@@ -9,117 +9,93 @@ using namespace std;
 #define X first 
 #define Y second 
 
+
 int dx[4] = {1,0,-1,0};
 int dy[4] = {0,1,0,-1};
 
-string board[1002];
-int dist[1002][1002];
-int dist2[1002][1002];
+int board[102][102];
+int vis[102][102];
+int num = 0; //구역의 갯수
 
-int t,w,h;
+int m,n,k; 
 
 int main(){ 
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    cin>>t;
+    cin>>m>>n>>k; 
 
-    while(t--){
-        bool success = false;
 
-        ///불의 BFS
-        queue<pair<int,int>> q ={};
-
-        ///상근이의 BFS
-        queue<pair<int,int>> q2 = {};
-       
-        cin>>w>>h;
-
-        for(int i=0;i<h; i++){
-            fill(dist[i], dist[i]+w, -1);
-            fill(dist2[i], dist2[i]+w, -1);        
-        }
-            
-        for(int i=0; i<h; i++){
-            cin>>board[i];
-        }
-
+    //직사각형 수만큼 반복
+    while(k--){
+        int leftx, lefty, rightx, righty; 
+        cin >> leftx >> lefty >> rightx >> righty;
         
-        ///한번씩 쭉 돌면서 불과 상근이의 위치를 찾아서 큐에 넣어줌
-        for(int i=0;i<h;i++){
-            string s = board[i];
-            for(int j=0; j<w; j++){
-                //만약 불이면 큐에넣음
-                if(s[j] == '*'){
-                    q.push({i,j});
-                    dist[i][j] = 0;
-                }
-
-                //만약 상근이면 큐2에 넣음
-                 if(s[j] == '@'){
-                    q2.push({i,j});
-                    dist2[i][j] = 0;
-                }
+        //직사각형이 있는 좌표들의 board값을 1로 해주기 
+        for(int i=lefty; i < righty; i++){
+            for(int j=leftx; j < rightx; j++){
+                vis[i][j] = 1;
             }
         }
+    }
 
-        //불의 BFS부터 시작하며 dist값을 채워주기
-        while(!q.empty()){
-            auto cur = q.front();
-            q.pop();
+    int size[100] = {};
 
-            for(int i=0; i<4; i++){
-                int x = cur.X +dx[i];
-                int y = cur.Y +dy[i];
+    //한칸씩 방문하면서 BFS 진행
+    for(int i=0; i<m; i++){
+        for(int j=0; j<n; j++){
 
-                //범위 벗어나면 패스
-                if(x<0 || x>=h || y<0 || y>=w )
-                    continue;
-                //벽이 있으면 패스, 이미 지난곳이면 패스
-                if(board[x][y]=='#' || dist[x][y] >=0 )
-                    continue;
+            queue<pair<int,int>> q;
+            
+            //방문한적 없거나 벽이 아니라면 - 구역중 한 칸에 들어온거임
+            if(vis[i][j] != 1 ){
+                num++;
+                int sum = 0; //구역의 크기를 저장할 녀석
+                q.push({i,j});
+                vis[i][j] = 1;
                 
-                dist[x][y] = dist[cur.X][cur.Y]+1;  
-                q.push({x,y});
+                //BFS진행
+                while(!q.empty()){
+                    auto cur = q.front();
+                    q.pop(); 
+                    
+                    for(int i=0; i<4; i++){  
+                        int x = cur.X + dx[i];
+                        int y = cur.Y + dy[i];
+                        
+                        //범위지나면 패스
+                        if(x<0 || x>=m || y<0 || y>=n)
+                            continue;
+                        
+                        //방문한적 있으면
+                        if(vis[x][y] == 1)
+                            continue;
+                        
+                        q.push({x,y});
+                        vis[x][y] = 1;
+                        sum++;
+                    } 
+                }  
+                //구역의 크기를 저장
+                size[--num] = sum; 
+                num++; 
             }
+
         }
+    }
+
+    //오름차순 정렬
+    sort(size, size+num);
+
+    cout << num<<'\n';
+    
+    for(int i=0; i<num; i++){
+        cout << size[i]+1<<' ';   
+    }
+    
     
 
-         //상근이의 BFS 시작하며 dist2값을 채워주기
-        while(!q2.empty() && !success ){
-            auto cur = q2.front();
-            q2.pop();
-
-            for(int i=0; i<4; i++){
-                int x = cur.X +dx[i];
-                int y = cur.Y +dy[i];
-
-                //범위 벗어나면 탈출성공인것임
-                if(x<0 || x>=h || y<0 || y>=w ){ 
-                    cout<< dist2[cur.X][cur.Y]+1<<'\n'; 
-                    success = true;
-                    break;
-                }
-
-                //벽이 있으면 패스, 이미 지난곳이면 패스 
-                if(board[x][y]=='#' || dist2[x][y] >=0 )
-                    continue;
-
-                //불이 이미 지났거나 오는곳이면 패스
-                if(dist[x][y] != -1  &&  dist[x][y] <= dist2[cur.X][cur.Y]+1  )
-                    continue;
-
-                
-                dist2[x][y] = dist2[cur.X][cur.Y]+1;  
-                q2.push({x,y});
-            }
-        }
-
-
-        if(!success)
-            cout<<"IMPOSSIBLE"<<'\n';
-
-    }
+    
 
     return 0;
 }
