@@ -1,103 +1,28 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <list>
-#include <stack> 
-#include <queue>
-using namespace std; 
-
-#define X first 
-#define Y second 
 
 
-int dx[4] = {1,0,-1,0};
-int dy[4] = {0,1,0,-1};
+/*
 
-int board[102][102];
-int vis[102][102];
-int num = 0; //구역의 갯수
+//DFS (깊이 우선 서치) : 다차원 배열에서 각 칸을 방문할때 깊이를 우선으로 방문하는 알고리즘
 
-int m,n,k; 
+진행하는 과정은 BFS와 다 똑같은데 큐대신 스택을 씀. 이것말고는 다 똑같음.
 
-int main(){ 
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+둘은 방문순서에서 큰 차이가 존재함. 
 
-    cin>>m>>n>>k; 
+DFS는 한 방향으로 막히기 전까지 쭉 방문함. 
+
+---> 최단거리문제 등.. 거리를 계산하는 문제에선 BFS만 가능. 
+왜냐면 BFS는 현재 보는 칸의 dist값이 이전 dist값+1 이지만,  
+DFS에서는 일단 깊이 방문하다가 한바퀴 돌아서 초반부로 돌아올 수 있기에..dist값이 부정확함. 
 
 
-    //직사각형 수만큼 반복
-    while(k--){
-        int leftx, lefty, rightx, righty; 
-        cin >> leftx >> lefty >> rightx >> righty;
-        
-        //직사각형이 있는 좌표들의 board값을 1로 해주기 
-        for(int i=lefty; i < righty; i++){
-            for(int j=leftx; j < rightx; j++){
-                vis[i][j] = 1;
-            }
-        }
-    }
+-->쨋든 거리측정은 BFS만 할 수 있으니 앞으로 BFS 대신 DFS 쓸 일은 거의 없음. 
+그래서 앞으로 다차원 배열에서 순회하는 문제를 풀 때는 계속 BFS만 쓸 거임. 
+하지만 그래도 DFS는 나중에 그래프와 트리라는 자료구조를 배울 때 필요함. 
 
-    int size[100] = {};
 
-    //한칸씩 방문하면서 BFS 진행
-    for(int i=0; i<m; i++){
-        for(int j=0; j<n; j++){
 
-            queue<pair<int,int>> q;
-            
-            //방문한적 없거나 벽이 아니라면 - 구역중 한 칸에 들어온거임
-            if(vis[i][j] != 1 ){
-                num++;
-                int sum = 0; //구역의 크기를 저장할 녀석
-                q.push({i,j});
-                vis[i][j] = 1;
-                
-                //BFS진행
-                while(!q.empty()){
-                    auto cur = q.front();
-                    q.pop(); 
-                    
-                    for(int i=0; i<4; i++){  
-                        int x = cur.X + dx[i];
-                        int y = cur.Y + dy[i];
-                        
-                        //범위지나면 패스
-                        if(x<0 || x>=m || y<0 || y>=n)
-                            continue;
-                        
-                        //방문한적 있으면
-                        if(vis[x][y] == 1)
-                            continue;
-                        
-                        q.push({x,y});
-                        vis[x][y] = 1;
-                        sum++;
-                    } 
-                }  
-                //구역의 크기를 저장
-                size[--num] = sum; 
-                num++; 
-            }
+*/
 
-        }
-    }
 
-    //오름차순 정렬
-    sort(size, size+num);
-
-    cout << num<<'\n';
-    
-    for(int i=0; i<num; i++){
-        cout << size[i]+1<<' ';   
-    }
-    
-    
-
-    
-
-    return 0;
-}
 
 
