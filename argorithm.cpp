@@ -1,28 +1,86 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <list>
+#include <stack> 
+#include <queue>
+using namespace std; 
+
+#define X first 
+#define Y second 
+
+string board[28];
+bool vis[28][28];
+
+int dx[4]= {1,0,-1,0};
+int dy[4]= {0,1,0,-1}; 
+
+ queue<pair<int,int>> q;
+
+int n;
+
+int main(){ 
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    vector<int> ans;  
+    int count=0;  //단지의 갯수
+
+    cin>>n;
+
+    for(int i=0; i<n; i++){
+          cin>>board[i];
+    }
 
 
-/*
-
-//DFS (깊이 우선 서치) : 다차원 배열에서 각 칸을 방문할때 깊이를 우선으로 방문하는 알고리즘
-
-진행하는 과정은 BFS와 다 똑같은데 큐대신 스택을 씀. 이것말고는 다 똑같음.
-
-둘은 방문순서에서 큰 차이가 존재함. 
-
-DFS는 한 방향으로 막히기 전까지 쭉 방문함. 
-
----> 최단거리문제 등.. 거리를 계산하는 문제에선 BFS만 가능. 
-왜냐면 BFS는 현재 보는 칸의 dist값이 이전 dist값+1 이지만,  
-DFS에서는 일단 깊이 방문하다가 한바퀴 돌아서 초반부로 돌아올 수 있기에..dist값이 부정확함. 
 
 
--->쨋든 거리측정은 BFS만 할 수 있으니 앞으로 BFS 대신 DFS 쓸 일은 거의 없음. 
-그래서 앞으로 다차원 배열에서 순회하는 문제를 풀 때는 계속 BFS만 쓸 거임. 
-하지만 그래도 DFS는 나중에 그래프와 트리라는 자료구조를 배울 때 필요함. 
+    //한칸씩 돌면서 확인하다가 1인칸 나오면 바로 BFS실행
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){ 
 
+            if(board[i][j]=='0' || vis[i][j]==1)
+                continue; 
 
+            q.push({i,j});
+            vis[i][j] = 1;
+            count++;  //단지갯수 증가시켜줌
+            int size = 1;  // 단지 하나의 크기
 
-*/
+            while(!q.empty()){
+                auto cur = q.front();
+                q.pop();
 
+                for(int i=0; i<4; i++){
+                    int x = cur.X + dx[i];
+                    int y = cur.Y + dy[i];
+
+                    if(x<0 || x>=n || y<0 || y>=n)
+                        continue;
+                    if(board[x][y] =='0' || vis[x][y] ==1)
+                        continue;
+                    
+                    q.push({x,y});
+                    vis[x][y] = 1;
+                    size++;
+
+                }
+            }
+            ans.push_back(size);
+        }
+    }
+    
+
+    cout<<count<<'\n';
+    
+    sort(ans.begin(), ans.end());  //오름차순정렬
+
+    for(int i: ans){
+        cout<< i <<'\n';
+    }
+
+    return 0;
+}
 
 
 
