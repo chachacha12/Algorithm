@@ -6,91 +6,97 @@
 #include <queue>
 using namespace std; 
 
-#define X first 
-#define Y second 
+char board[32][32][32];
+int dist[32][32][32];
 
-int board[102][102];
-bool vis[102][102];
-
-int dx[4] = {1,0,-1,0};
-int dy[4] = {0, 1, 0 ,-1};
-
-int n;
-
-int maxheight; //잠길수있는 물의 최대 높이
-
-int result;
-
+int dh[6] = {0,0,0,0,-1,1};
+int dx[6] = {1,-1,0,0,0,0};
+int dy[6] = {0,0,1,-1,0,0};
 
 
 int main(){ 
     ios::sync_with_stdio(0);  
     cin.tie(0); 
-    
-    cin>>n;
 
-    for(int i=0; i<n; i++){
-         for(int j=0; j<n; j++){
-            cin>>board[i][j]; 
+    while(true){
+        queue<tuple<int, int, int>> q;
+        int l,r,c;
+        cin >> l >> r >> c;
 
-            maxheight = max(maxheight,board[i][j]);
-         }
-    }
-
-    //물높이를 0부터 잠길수있는 최대 높이까지 하나씩 해보며 BFS돌려서 몇개의 영역이 생기는지 확인해서 max값을 저장
-    for(int h=0; h<maxheight; h++){
-        //큐와 vis값은 새로운 물높이일때마다 초기화 해줘야함. 
-        queue<pair<int, int>> q;
-       
-       // 방문배열 초기화
-        for(int i = 0; i < n; i++)
-             fill(vis[i], vis[i]+n, 0); 
-
-        int count=0;
+          //종료
+        if(l==0 && r == 0 && c==0)
+            return 0; 
         
-        //한칸씩 움직이면서 BFS진행
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                
-                //물에 잠겼거나 방문했으면 패스 
-                if(h >= board[i][j] || vis[i][j] == 1 )
-                    continue;
-                
-                //새로운 하나의 영역을 찾은거임 
-                count++; 
-                
-                q.push({i,j});
-                vis[i][j] = 1;
-
-                while(!q.empty()){
-                    auto cur = q.front();
-                    q.pop();
-                    
-                    for(int i=0; i<4; i++){
-                        int x = cur.X + dx[i];
-                        int y = cur.Y + dy[i];
-                        
-                        if(x<0 || x>=n || y <0 || y>=n)
-                            continue;
-
-                        //높이가 물높이 이하거나 이미 방문했으면 패스
-                        if(board[x][y] <= h ||  vis[x][y] == 1 )
-                            continue;
-                        
-                        q.push({x,y});
-                        vis[x][y] =1;
-                    }
+          //dist값 초기화
+          for(int i=0; i<l; i++){
+            for(int j=0; j<r; j++){
+                for(int k = 0; k<c; k++){
+                    dist[i][j][k] = -1;
                 }
-
             }
         }
 
-        //더 큰 값을 비교해서 저장
-        result = max(result, count);
+        //입력받아서 board값 채움
+        for(int i=0; i<l; i++){
+            for(int j=0; j<r; j++){
+                for(int k = 0; k<c; k++){
+                    cin>>board[i][j][k];
+                    
+                    //시작점을 큐에 넣음
+                    if(board[i][j][k] == 'S'){
+                        dist[i][j][k] =0;
+                        q.push({i,j,k});
+                    }
+                        
+                }
+            }
+            //cout<<"\n"; 
+        }
 
+        bool escape = false;
+        
+        ///BFS진행
+        while(!q.empty()){
+            auto cur = q.front();
+            q.pop();
+
+            for(int i=0; i<6; i++){
+                int h = get<0>(cur) +dh[i];
+                int y = get<1>(cur) +dy[i];
+                int x = get<2>(cur) +dx[i];
+                
+                if(h < 0 || h>=l || y<0 || y >= r || x <0 || x>= c)
+                    continue;
+
+                //탈출지점 도착시
+                if(board[h][y][x] == 'E'){
+                    cout<<"Escaped in "<< dist[get<0>(cur)][get<1>(cur)][get<2>(cur)] +1<<" minute(s)."<<"\n";
+                    escape = true;
+                    break;
+                }
+                
+                //벽이거나 이미 방문한곳이면 패스
+                if(board[h][y][x] == '#'  || dist[h][y][x] >= 0 )
+                    continue;
+                
+                dist[h][y][x] = dist[get<0>(cur)][get<1>(cur)][get<2>(cur)] +1;
+                q.push({h,y,x});
+            }
+
+            if(escape){
+                  break;
+            }  
+        }
+
+        if(!escape)
+            cout<<"Trapped!"<<"\n";
+
+
+    
     }
 
-    cout<<result;
+
+
 
 
 
