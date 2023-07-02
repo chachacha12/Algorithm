@@ -6,99 +6,95 @@
 #include <queue>
 using namespace std; 
 
-char board[32][32][32];
-int dist[32][32][32];
+/*
+아래는 내가 직접 생각해서 짜본 코드이고
+바킹독 설명: https://www.youtube.com/watch?v=yPuow6aACvE
 
-int dh[6] = {0,0,0,0,-1,1};
-int dx[6] = {1,-1,0,0,0,0};
-int dy[6] = {0,0,1,-1,0,0};
+-> 이 문제는 시간복잡도 널널하게 n제곱으로 풀어도된다면, 그냥 쉽게
+학생 하나하나 반복하면서 다시 자신에게로 돌아오는지만 체크해보면됨. 돌아오면 팀 있는거고
+안돌아오면 팀 없는것.  (사이클안에 포함되어 있으면 무조건 자기자신에게로 다시 돌아오기 때문) 
 
+*/
+
+
+
+int t;
 
 int main(){ 
     ios::sync_with_stdio(0);  
     cin.tie(0); 
 
-    while(true){
-        queue<tuple<int, int, int>> q;
-        int l,r,c;
-        cin >> l >> r >> c;
+    cin>>t;
 
-          //종료
-        if(l==0 && r == 0 && c==0)
-            return 0; 
-        
-          //dist값 초기화
-          for(int i=0; i<l; i++){
-            for(int j=0; j<r; j++){
-                for(int k = 0; k<c; k++){
-                    dist[i][j][k] = -1;
-                }
-            }
+    //테스트케이스 수만큼 반복
+    while(t--){
+        int board[100002];
+        int dist[100002]; //0이면 아직 미방문. 1이면 방문한상태(스택에 들어있는상태). 2이면 팀 이미 이뤘거나 절대 못 이루는 상태
+        fill(board, board+100002,0);
+        fill(dist, dist+100002,0);
+        stack<int> s;
+        int n=0;
+        int chosen_num =0;
+
+        cin>>n;
+
+        //학생들 수만큼 반복하며 각 학생들이 선택한 번호 입력
+        for(int i=1; i<=n; i++){
+            cin>>board[i];
         }
 
-        //입력받아서 board값 채움
-        for(int i=0; i<l; i++){
-            for(int j=0; j<r; j++){
-                for(int k = 0; k<c; k++){
-                    cin>>board[i][j][k];
-                    
-                    //시작점을 큐에 넣음
-                    if(board[i][j][k] == 'S'){
-                        dist[i][j][k] =0;
-                        q.push({i,j,k});
+        //팀 못이룬 학생수를 출력해줘야함
+        
+        //학생 한명한명 돌면서 만약 아직 미방문인 인덱스면 스택에 넣어줌
+        for(int i=1; i<=n;i++){
+
+                if(dist[i] == 2 ) {       //방문한 경우
+                    continue;
+                }else{        //미방문인 경우
+                    s.push(i);
+                    dist[i] = 1; //스택에 들어가면 1
+
+                    while(!s.empty()){
+                        int index = s.top(); 
+
+                        //미방문인 경우  - 계속해서 다음녀석들 방문해줄거
+                        if(dist[board[index]] == 0){
+                            s.push(board[index]);
+                            dist[board[index]] = 1;  //스택에 넣었다는 표시
+
+                        //방문해서 스택에 있는경우, 즉 사이클 만들어진것 (본인이 본인 선택한 경우도 포함) - 팀이뤄진거임
+                        }else if(dist[board[index]] ==  1){
+
+                            while(s.top() != board[index]){
+                                dist[ s.top() ] = 2;
+                                chosen_num++;
+                                s.pop();
+                            }
+                            dist[ s.top() ] = 2;
+                            chosen_num++;
+                            s.pop();
+                            
+                            while(!s.empty()){  //나머지 선택 못받은 녀석들도 다 비워주기
+                                dist[ s.top() ] = 2;
+                                s.pop();
+                            } 
+
+                        }else{  //이미 방문했던 경우 - 팀을 절대 만들 수 없음
+                            
+                            while(!s.empty()){  //이때끼지 스택에 쌓인 녀석들 다 방문표시
+                                dist[ s.top() ] = 2;
+                                s.pop();
+                            } 
+                        }
                     }
-                        
                 }
-            }
-            //cout<<"\n"; 
         }
-
-        bool escape = false;
-        
-        ///BFS진행
-        while(!q.empty()){
-            auto cur = q.front();
-            q.pop();
-
-            for(int i=0; i<6; i++){
-                int h = get<0>(cur) +dh[i];
-                int y = get<1>(cur) +dy[i];
-                int x = get<2>(cur) +dx[i];
-                
-                if(h < 0 || h>=l || y<0 || y >= r || x <0 || x>= c)
-                    continue;
-
-                //탈출지점 도착시
-                if(board[h][y][x] == 'E'){
-                    cout<<"Escaped in "<< dist[get<0>(cur)][get<1>(cur)][get<2>(cur)] +1<<" minute(s)."<<"\n";
-                    escape = true;
-                    break;
-                }
-                
-                //벽이거나 이미 방문한곳이면 패스
-                if(board[h][y][x] == '#'  || dist[h][y][x] >= 0 )
-                    continue;
-                
-                dist[h][y][x] = dist[get<0>(cur)][get<1>(cur)][get<2>(cur)] +1;
-                q.push({h,y,x});
-            }
-
-            if(escape){
-                  break;
-            }  
-        }
-
-        if(!escape)
-            cout<<"Trapped!"<<"\n";
-
-
-    
+         
+        int result = n - chosen_num;  //전체 학생수 - 선택받은 학생수
+        cout << result<<"\n";
     }
-
-
-
-
-
+    
+    
 
 
     return 0;
