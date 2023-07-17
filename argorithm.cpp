@@ -7,30 +7,25 @@
 using namespace std; 
 
 
-/* 
-재귀문제는 n=k가 참이라 칠때, n=k+1도 참이 될만한 반복?되는 그 패턴을 찾아서 재귀함수 만들면됨.
-그럼 모든 n에 대해 참이됨
-*/
+void func(int n, int index){
 
-//이 함수는 n이 주어졌을때 r행, c열을 몇번째로 방문했는지를 반환해주는 함수
-int func(int n, int r, int c){
-    if(n==0)
-        return 0;
-    
-    int half = 1<<(n-1);
+    string s ="";
+    for(int i=1; i<index; i++)
+        s+= "____";
 
-
-    //1번 사각형 안에 포함될경우
-    if(r < half && c < half)
-        return func(n-1, r, c);
-    //2번 사각형
-    if(r < half && c >= half)
-        return half*half + func(n-1, r, c-half);
-    //3번 사각형
-    if(r >= half && c< half)
-        return 2*half*half + func(n-1, r-half, c);
-    //4번 사각형
-    return 3*half*half + func(n-1, r-half, c-half);
+    if(n==0){
+        cout<< s <<'"'<<"재귀함수가 뭔가요?"<<'"'<<"\n";
+        cout<< s <<'"'<<"재귀함수는 자기 자신을 호출하는 함수라네"<<'"'<<"\n";
+        cout<< s <<"라고 답변하였지."<<"\n";
+        return;
+    }else{
+        cout<< s <<'"'<<"재귀함수가 뭔가요?"<<'"'<<"\n";
+        cout<< s <<'"'<<"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어."<<"\n";
+        cout<< s <<"마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지." <<"\n";
+        cout<< s <<"그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어."<<'"'<<"\n";
+    }
+    func(--n, ++index);
+    cout<< s <<"라고 답변하였지."<<"\n";
 }
 
 
@@ -39,13 +34,14 @@ int main(){
     ios::sync_with_stdio(0);  
     cin.tie(0); 
 
-    int n,r,c;
+    int n;
 
-    cin>>n>>r>>c;
+    cin>>n;
 
-    cout<<func(n,r,c);
+    cout<<"어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다."<<"\n";
+    func(n,1);
 
-   
+
     return 0;
 }
 
