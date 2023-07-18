@@ -7,27 +7,48 @@
 using namespace std; 
 
 
-void func(int n, int index){
+int arr[3000][3000];
 
-    string s ="";
-    for(int i=1; i<index; i++)
-        s+= "____";
+int first=0;
+int second=0;
+int third=0;
 
-    if(n==0){
-        cout<< s <<'"'<<"재귀함수가 뭔가요?"<<'"'<<"\n";
-        cout<< s <<'"'<<"재귀함수는 자기 자신을 호출하는 함수라네"<<'"'<<"\n";
-        cout<< s <<"라고 답변하였지."<<"\n";
-        return;
-    }else{
-        cout<< s <<'"'<<"재귀함수가 뭔가요?"<<'"'<<"\n";
-        cout<< s <<'"'<<"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어."<<"\n";
-        cout<< s <<"마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지." <<"\n";
-        cout<< s <<"그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어."<<'"'<<"\n";
+void func(int x, int y, int size){
+
+    bool same = true;
+    for(int i=y; i<y+size; i++){  //탐색
+        for(int j=x; j<x+size; j++){
+            if(arr[i][j] != arr[y][x] ){
+                same = false;
+                break;
+            }
+        }
+        if(!same)
+             break;
     }
-    func(--n, ++index);
-    cout<< s <<"라고 답변하였지."<<"\n";
-}
 
+    if(same){
+        if(arr[y][x]==-1){
+            first++;
+        }else if(arr[y][x]==0){
+            second++;
+        }else{
+            third++;
+        }
+    }else{
+        func(x,y,size/3); //1번
+        func(x+size/3, y, size/3); //2번
+        func(x+2*size/3, y, size/3); //3번
+        
+        func(x, y+size/3, size/3);
+        func(x+size/3, y+size/3, size/3);
+        func(x+2*size/3, y+size/3, size/3);
+
+        func(x, y+2*size/3, size/3);
+        func(x+size/3, y+2*size/3, size/3);
+        func(x+2*size/3, y+2*size/3, size/3);
+    }
+}
 
 
 int main(){ 
@@ -38,10 +59,17 @@ int main(){
 
     cin>>n;
 
-    cout<<"어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다."<<"\n";
-    func(n,1);
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            cin>>arr[i][j];
+        }
+    }
 
-
+    func(0,0,n);
+    cout<<first<<"\n";
+    cout<<second<<"\n";
+    cout<<third<<"\n";
+   
     return 0;
 }
 
