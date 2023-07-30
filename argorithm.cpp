@@ -7,42 +7,43 @@
 #include <queue>
 using namespace std; 
 
-//백트래킹은 n값이 작을때 진행하는 알고리즘인듯 
-
-int n;
+int n,s;
 int cnt;
-int isused1[40];
-int isused2[40];
-int isused3[40];
+int arr[25];
 
-void func(int cur){
-    if(cur == n){  //마지막 줄까지 갔다면
-        cnt++;
-        return;
+
+void func(int cur, int sum){ 
+  if(cur==n){
+    if(sum==s){
+      cnt++;
     }
-    for(int i=0; i<n; i++){
-        if( isused1[i] ||  isused2[cur+i]  || isused3[cur-i + n-1]  )
-            continue;
-        isused1[i] = 1;
-        isused2[cur+i] = 1;
-        isused3[cur-i + n-1] = 1;
-        func(cur+1);
-        isused1[i] = 0;
-        isused2[cur+i] = 0;
-        isused3[cur-i + n-1] = 0;
-    }
+    return;
+  }  
+  
+  func(cur+1, sum );
+  func(cur+1, sum + arr[cur]);
+
+  
 }
-
 
 
 int main(void){
   ios::sync_with_stdio(0);
   cin.tie(0);
-  cin>>n;
-  func(0);
-  cout<<cnt;
- 
+  cin>>n>>s;
+  
+  for(int i=0; i<n; i++){
+      cin>>arr[i];
+  }
 
+  func(0,0);
+
+  if(s==0) //합이 0인걸 구하는거면 수열중 아무것도 안들어가는 경우(공집합)인 경우는 빼줘야함. 문제에서 크기가 양수인 부분수열중에서 구하라해서
+    cnt--;
+
+  cout<<cnt;
+
+ 
 
 }
 
