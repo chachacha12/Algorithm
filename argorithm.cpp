@@ -8,7 +8,31 @@
 using namespace std; 
 
 int n,m;
-vector<int> a;
+int arr[10];
+bool isused[10];
+
+void func(int cur){
+  if(cur==m){
+    for(int i=0; i<m; i++)
+      cout<<arr[i]<<' ';
+    cout<<'\n';
+  }
+
+  for(int i=1; i<=n; i++){
+    
+    if( cur != 0  && i < arr[cur-1] )
+      continue;
+
+    if(isused[i] )
+      continue;
+    
+    isused[i] = 1;
+    arr[cur] = i;
+    func(cur+1);
+    isused[i] = 0;
+  }
+}
+
 
 
 int main(void){
@@ -17,26 +41,8 @@ int main(void){
 
   cin>>n>>m;
 
+  func(0);
 
-  if(n==m){
-    for(int i=0; i<n; i++)
-      cout<<i+1<<' ';
-  }else{
-      for(int i=0; i<n; i++){
-        if(i<m)
-          a.push_back(0);
-        else
-          a.push_back(1);
-      }
-
-      do{
-        for(int i=0; i<n; i++){
-          if(a[i]==0)
-            cout<<i+1<<' ';
-        }
-        cout<<'\n';
-      }while(next_permutation(a.begin(), a.end()) );
-  }
 }
 
 
