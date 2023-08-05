@@ -8,25 +8,28 @@
 using namespace std; 
 
 int n,m;
-int a[10];
-
+vector<int> a;
+int arr[10];
+bool isused[10];
 
 void func(int cur){
   if(cur == m){
     for(int i=0; i<m; i++){
-      cout<<a[i]<<' ';
+      cout<<arr[i]<<' ';
     }
     cout<<'\n';
-    return;
   }
-  for(int i=1; i<=n; i++){
-    if(cur !=0){
-      if(a[cur-1] > i)
-        continue;
-    }
-    a[cur] = i;
+  for(int i=0; i< a.size() ; i++){
+    if(isused[i])
+      continue;
+
+    isused[i] = 1;
+    arr[cur]= a[i];
     func(cur+1);
+    isused[i] = 0;
+
   }
+
 }
 
 
@@ -34,7 +37,17 @@ int main(void){
   ios::sync_with_stdio(0);
   cin.tie(0);
   cin>>n>>m;
+  
+  int t;
+  for(int i=0; i<n; i++){
+    cin>>t;
+    a.push_back(t);
+  }
+  sort(a.begin(), a.end());
   func(0);
+
+
+  
 
 }
 
