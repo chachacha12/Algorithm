@@ -8,29 +8,29 @@
 using namespace std; 
 
 int n,m;
-vector<int> a;
-int arr[10];
-bool isused[10];
+int a[10];
+int result[10];
+
 
 void func(int cur){
-  if(cur == m){
+  if(cur==m){
     for(int i=0; i<m; i++){
-      cout<<arr[i]<<' ';
+      cout<<result[i]<<' ';
     }
     cout<<'\n';
+    return;
   }
-  for(int i=0; i< a.size() ; i++){
-    if(isused[i])
+  for(int i=0; i<n; i++){
+    if(cur !=0  && result[cur-1] >= a[i] )
       continue;
 
-    isused[i] = 1;
-    arr[cur]= a[i];
+    result[cur] = a[i];
     func(cur+1);
-    isused[i] = 0;
 
   }
 
 }
+
 
 
 int main(void){
@@ -38,16 +38,13 @@ int main(void){
   cin.tie(0);
   cin>>n>>m;
   
-  int t;
   for(int i=0; i<n; i++){
-    cin>>t;
-    a.push_back(t);
+    cin>> a[i];
   }
-  sort(a.begin(), a.end());
+
+  sort(a, a+n);
   func(0);
 
-
-  
 
 }
 
