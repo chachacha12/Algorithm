@@ -21,6 +21,8 @@ void func(int cur){
     return;
   }
   for(int i=0; i<n; i++){
+    if(cur !=0 && result[cur-1] > a[i] )
+      continue;
 
     result[cur] = a[i];
     func(cur+1);
