@@ -14,7 +14,7 @@ int result[10];
 
 void func(int cur){
   if(cur==m){
-    for(int i=0; i<m; i++){
+    for(int i=0; i<m; i++){ 
       cout<< result[i]<<' '; 
     }
     cout<<'\n';
@@ -22,6 +22,8 @@ void func(int cur){
   }
   int tmp=0;
   for(int i=0; i<n; i++){
+    if(cur!=0 && result[cur-1] > a[i])
+      continue;
  
     if( tmp != a[i] ){ 
       tmp = a[i];
