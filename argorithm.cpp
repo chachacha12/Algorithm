@@ -11,7 +11,6 @@ using namespace std;
 int n,m;
 int a[10];
 int result[10];
-bool isused[10];
 
 void func(int cur){
   if(cur==m){
@@ -23,21 +22,15 @@ void func(int cur){
   }
   int tmp=0;
   for(int i=0; i<n; i++){
-    if(cur!=0 && result[cur-1] > a[i] )
-        continue;
-
-    if(!isused[i] && tmp != a[i] ){ 
+ 
+    if( tmp != a[i] ){ 
       tmp = a[i];
       result[cur] = a[i];
-      isused[i] = 1;
       func(cur+1);
-      isused[i] = 0;
     }
   }
 
 }
-
-
 
 
 int main(void){
