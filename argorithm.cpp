@@ -1,9 +1,70 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <stack>
+#include <queue>
+#include <vector>
+using namespace std; 
 
 
-시뮬레이션 유형이란?
--> BFS나 재귀와 같이 특히 쓰이는 자료구조 혹은 알고리즘 있는게 X. 
--> 주어진 문제 상황을 구현하면 되는데, 그 구현이 빡세게 필요한 것들이 시뮬레이션임. 
-별명은 빡 구현 유형, 노가다 유형...
+/*
+1. 
 
--> 시뮬레이션 유형은 배경지식 필요X. 구현력 필요함.본인의 구현력으로 얼마나 빠르고 정확하게 푸는지가 중요함. 
--> 개인 플젝 등 이것저것 코드 많이 짜봤으면 잘함. 
+*/
+
+
+int n,m;
+int arr[10][10];
+vector<pair<int,int>> cctv; //각 시시티비가 몇번 시시티비인지 저장
+
+
+
+int a[10];
+
+void func(int cur){
+  if(cur==m){
+    for(int i=0; i<m; i++){
+       cout<<a[i]<<" ";
+    }
+    cout<<"\n";
+    return;
+  }
+  for(int i=1; i<=n; i++ ){
+    a[cur] = i;
+
+    func(cur+1);
+
+  }
+
+}
+
+
+int main(void){
+  ios::sync_with_stdio(0);
+  cin.tie(0);
+
+  cin>>n>>m;
+
+  func(0);
+
+
+  return 0;
+}
+
+
+
+/*
+  cin>>n>>m;
+  for(int i=0;i<n; i++){
+    for(int j=0; j<m; j++){
+      cin>>arr[i][j];
+      
+
+    }
+  }
+
+  
+
+  cout<<"";
+
+*/
