@@ -1,70 +1,29 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <vector>
-using namespace std; 
+
+정렬
+
+  //기초 정렬
+  int arr[4] = {3,1,10,5};
+
+  int n=4;
+
+  for(int i=0; i<n; i++){
+    swap(arr[i], *min_element( arr+i, arr+n)); 
+  }  
+
+///////////////////////////////////////
+
+Merge Sort
+
+반씩 계속 재귀적으로 분할하고 정렬한 후 합치는 정렬. O(nlogn) 걸림.
+->머지 소트는 stable 소트임. 만약 비교하는 두 원소의 크기가 동일하면 앞에 원소를 먼저 써주면됨. 그러면 크기가 같은 원소들은 처음 정렬상태와 동일하게 정렬되게 하는 stable sort 가능.  
+추가적으로 필요한 공간이 O(n)임. 왜냐면 분할한거 합칠때 저장할 배열 하나 있어야해서..
 
 
-/*
-1. 
+///////////////////////////////////////////
+퀵소트 
 
-*/
-
-
-int n,m;
-int arr[10][10];
-vector<pair<int,int>> cctv; //각 시시티비가 몇번 시시티비인지 저장
-
-
-
-int a[10];
-
-void func(int cur){
-  if(cur==m){
-    for(int i=0; i<m; i++){
-       cout<<a[i]<<" ";
-    }
-    cout<<"\n";
-    return;
-  }
-  for(int i=1; i<=n; i++ ){
-    a[cur] = i;
-
-    func(cur+1);
-
-  }
-
-}
-
-
-int main(void){
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-
-  cin>>n>>m;
-
-  func(0);
-
-
-  return 0;
-}
-
-
-
-/*
-  cin>>n>>m;
-  for(int i=0;i<n; i++){
-    for(int j=0; j<m; j++){
-      cin>>arr[i][j];
-      
-
-    }
-  }
-
-  
-
-  cout<<"";
-
-*/
+피벗을 하나씩 계속 정하고 포인터를 리스트 양옆에 둬서 피벗보다 작은 수는 왼쪽으로, 피벗보다 큰 수는 오른쪽에 모이도록 함. 재귀적으로 계속 진행.  O(nlogn) 걸림
+—> 근데 이미 정렬된 상태에서 퀵소트 쓰거나 하면 최악의 경우 O(n제곱)걸림. 그래서  stl안쓰고 실제 구현해야하면 코테에선 머지소트 쓰기. stl써도되면 그냥 쓰고.
+평균적으로 머지소트보다 조금은 더 빨라서 다양한 라이브러리에선 퀵소트씀.
+추가적으로 필요한 공간 O(1)임. 그냥 배열 하나 새로 안 만들고 포인터 2개로 그 자리에서 스왑해주면 되어서..(이것 때문에 머지소트보다 캐시 hit rate 등이 좋아서 더 빠름)
+그리고 얘는 stable sort는 아님.
