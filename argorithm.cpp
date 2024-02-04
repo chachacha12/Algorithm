@@ -1,55 +1,19 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <vector>
-using namespace std; 
+///////////////////////////////////////////
+카운팅 소트
+
+n이 1000만이하의 작은 수라면, 카운팅 소트 쓰면 구현쉽고 빠름.
+나오는 숫자의 갯수를 세어두었다가 출력해주면 됨. 하지만 수가 크면 이거 못씀.
 
 
-
-int main(void){
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-
-  int plus[1000002];
-  int minus[1000002];
-  int n;
-
-  fill(plus, plus+1000002, 0);
-  fill(minus, minus+1000002, 0);
-
-  cin>>n;
-  
-  for(int i=0; i<n; i++){
-    int a;
-    cin>>a;
-    
-    if(a<0){
-      minus[-a]++;
-    }else{
-      plus[a]++;
-    }
-  }
-
-  for(int i=1000000; i>0; i--){
-    if(minus[i] !=0 ){
-      while(minus[i]--){
-         cout<<-i<<"\n";
-      }
-    }
-  }
-
-  for(int i=0; i<1000000; i++){
-    if(plus[i] !=0 ){
-      while(plus[i]--){
-         cout<<i<<"\n";
-      }
-    }
-  }
+///////////////////////////////////////////
+Radix 소트
 
 
+///////////////////////////////////////////
+  STL 소트 -> 코테는 이거 쓰면됨. O(nlogn) 걸림.
 
-  return 0;
-}
+  int a[5] = {1,4,5,2,7};
+  sort(a,a+5);
 
+  vector<int> b = {1,4,5,2,7};
+  sort(b.begin(), b.end());
