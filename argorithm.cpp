@@ -6,34 +6,19 @@
 #include <vector>
 using namespace std; 
 
+#define X first
+#define Y second
 
-int n;
-pair<int, string> arr[100002];
+int n, a, b;
+pair<int, int> p[100004];
 
-
-//사용자정의 함수 - sort()함수에 넣으면 이거대로 정렬가능
-bool compare(pair<int, string> a, pair<int, string> b){
-  return a.first < b.first;  
-}
-  
-int main(void){
+int main(void) {
   ios::sync_with_stdio(0);
   cin.tie(0);
-
-  cin>>n;
-
-  for(int i=0; i<n; i++){
-    cin>>arr[i].first>>arr[i].second;
+  cin >> n;
+  for(int i = 0; i < n; i++) {
+    cin >> p[i].X >> p[i].Y;
   }
-
-  stable_sort(arr, arr+n, compare);
-
-
-  for(int i=0; i<n; i++){
-    cout<< arr[i].first <<" "<< arr[i].second<<'\n';
-  }
-  
-
-  return 0;
+  sort(p, p + n);
+  for(int i = 0; i < n; i++) cout << p[i].X << ' ' << p[i].Y << '\n';
 }
-

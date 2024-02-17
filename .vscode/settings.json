@@ -8,6 +8,11 @@
         "queue": "cpp",
         "tuple": "cpp",
         "list": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "ostream": "cpp",
+        "__locale": "cpp",
+        "__string": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }
