@@ -6,20 +6,10 @@
 #include <vector>
 using namespace std; 
 
-bool compare(pair<int, int> a, pair<int, int> b){
-
-  if(a.second < b.second){
-    return true;
-  }else if(a.second == b.second){
-    return a.first < b.first;
-  }else{
-    return false;
-  }
-}
-
 
 int n;
-pair<int, int> p[100002];
+vector<long long> v;
+string st;
 
 
 int main(void){
@@ -29,16 +19,16 @@ int main(void){
   cin>>n;
 
   for(int i=0; i<n; i++){
-    cin >> p[i].first >> p[i].second;
-  }
-
-  sort(p, p+n, compare);
-
-  for(int i=0; i<n; i++){
-    cout << p[i].first <<" "<< p[i].second;
-    cout<<'\n';
+    cin>>st;
+    reverse(st.begin(), st.end());
+    v.push_back(stoll(st));
   }
   
+  sort(v.begin(), v.end());
+
+  for(int i=0; i<n; i++){
+    cout<<v[i]<<"\n";
+  }
   
 
   return 0;
