@@ -7,10 +7,13 @@
 using namespace std; 
 
 
-int n;
-vector<long long> v;
-string st;
+bool compare(string a, string b){
+  return a.length() < b.length();
+}
 
+
+int n;
+vector<string> vs;
 
 int main(void){
   ios::sync_with_stdio(0);
@@ -19,17 +22,25 @@ int main(void){
   cin>>n;
 
   for(int i=0; i<n; i++){
-    cin>>st;
-    reverse(st.begin(), st.end());
-    v.push_back(stoll(st));
+    string st;
+    cin>> st;
+    vs.push_back(st);
   }
-  
-  sort(v.begin(), v.end());
 
+
+  //사전순정렬
+  sort(vs.begin(), vs.end());
+
+  //길이순 정렬
+  stable_sort(vs.begin(), vs.end(), compare);
+
+
+  //출력
   for(int i=0; i<n; i++){
-    cout<<v[i]<<"\n";
+    if(vs[i]==vs[i+1]) //중복되는것들은 출력안함
+      continue;
+    cout << vs[i] <<"\n";
   }
-  
 
   return 0;
 }
