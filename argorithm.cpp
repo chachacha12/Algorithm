@@ -7,44 +7,50 @@
 using namespace std; 
 
 
-bool compare(pair<int, int>a, pair<int, int>b ){
-  return a.first > b.first;
-}
-
-int n,c;
+int t, n, m;
 
 int main(void){
   ios::sync_with_stdio(0);
   cin.tie(0);
 
-  cin >>n>>c;
+  cin>>t;
+  
+  while(t--){
+    int count=0;
+    vector<int> a;
+    vector<int> b;
 
-  vector<pair<int,int>> arr;
+    cin>>n>>m;
 
-  for(int i=0; i<n; i++){
-    long long num;
-    cin>>num;
-    bool check =false;
+    for(int i=0; i<n; i++){
+      int num;
+      cin>>num;
+      a.push_back(num);
+    }
+    for(int i=0; i<m; i++){
+      int num;
+      cin>>num;
+      b.push_back(num);
+    }
 
-    for(int j=0; j<i; j++){
-      //이미 앞에 나온 수라면
-      if(j<i && arr[j].second == num ){
-        arr[j].first++;
-        check = true;
-        break;
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+
+
+    for(int i=0; i<n; i++){
+      int anum = a[i];
+      for(int j=0; j<m; j++){
+        int bnum = b[j];
+        
+        if(anum > bnum){ //a값이 b보다 더 클때
+          count++;
+        }else{ //a값이 b와 같거나 작을때
+          break;
+        }
+
       }
     }
-    if(!check){
-      arr.push_back({1, num});  
-    }
-  }
-  
-  stable_sort(arr.begin(), arr.end(), compare);
-
-  for(auto a: arr){
-    while(a.first--){
-      cout<<a.second<<" ";
-    }
+    cout<<count<<'\n';
   }
   
 
