@@ -7,53 +7,29 @@
 using namespace std; 
 
 
-int t, n, m;
+int d[1000005];
+int n;
 
 int main(void){
   ios::sync_with_stdio(0);
   cin.tie(0);
 
-  cin>>t;
+  cin>>n;
   
-  while(t--){
-    int count=0;
-    vector<int> a;
-    vector<int> b;
+  d[1] = 0;
 
-    cin>>n>>m;
-
-    for(int i=0; i<n; i++){
-      int num;
-      cin>>num;
-      a.push_back(num);
+  for(int i=2; i<=n; i++){
+    d[i] = d[i-1]+1;
+    if(i%2==0){
+      d[i] = min(d[i], d[i/2]+1);
     }
-    for(int i=0; i<m; i++){
-      int num;
-      cin>>num;
-      b.push_back(num);
+    if(i%3==0){
+       d[i] = min(d[i], d[i/3]+1);
     }
-
-    sort(a.begin(), a.end());
-    sort(b.begin(), b.end());
-
-
-    for(int i=0; i<n; i++){
-      int anum = a[i];
-      for(int j=0; j<m; j++){
-        int bnum = b[j];
-        
-        if(anum > bnum){ //a값이 b보다 더 클때
-          count++;
-        }else{ //a값이 b와 같거나 작을때
-          break;
-        }
-
-      }
-    }
-    cout<<count<<'\n';
   }
-  
+  cout<<d[n];
 
+  
   return 0;
 }
 
