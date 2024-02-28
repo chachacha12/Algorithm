@@ -6,36 +6,53 @@
 #include <vector>
 using namespace std; 
 
-
-int d[305][3];
-int s[305];
-
+int n;
+int R[1005];
+int G[1005];
+int B[1005];
+int d[1005][3];
 
 int main(void){
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  //점화식
-  // d[k][1] = max(d[k-2][1], d[k-2][2]) + s[k]
-  // d[k][2] = d[k-1][1] + s[k]
+  /*
 
-  int n;
+  테이블 정의: 
+  d[i][0] = i번째 집을 빨강으로 칠했을때 비용의 최솟값
+  d[i][1] = i번째 집을 초록으로 칠했을때 비용의 최솟값
+  d[i][2] = i번째 집을 파랑으로 칠했을때 비용의 최솟값
+
+  점화식:
+  d[k][0] = min(d[k-1][1], d[k-1][2]) + R[k]
+  d[k][1] = min(d[k-1][0], d[k-1][2]) + G[k]
+  d[k][2] = min(d[k-1][1], d[k-1][0]) + B[k]
+
+  초기값: 
+  d[1][0] = R[1]
+  d[1][1] = G[1]
+  d[1][2] = B[1]
+  */
+
   cin>>n;
 
-   for(int i=1; i<=n; i++){
-    cin>>s[i];
-   }
-
-  d[1][1] = s[1]; d[1][2] = 0;
-  d[2][1] = s[2]; d[2][2] = s[1]+s[2];
-
-
-  for(int i=3; i<=n; i++){
-    d[i][1] = max(d[i-2][1], d[i-2][2]) + s[i];
-    d[i][2] = d[i-1][1] + s[i]; 
+  for(int i=1; i<=n; i++){
+    cin>>R[i] >>G[i]>> B[i];
   }
 
-  cout << max(d[n][1], d[n][2]);
+  d[1][0] = R[1];
+  d[1][1] = G[1];
+  d[1][2] = B[1];
+
+  for(int k=2; k<=n; k++){
+    d[k][0] = min(d[k-1][1], d[k-1][2]) + R[k];
+    d[k][1] = min(d[k-1][0], d[k-1][2]) + G[k];
+    d[k][2] = min(d[k-1][1], d[k-1][0]) + B[k];
+  }
+
+
+  cout<< min({d[n][0], d[n][1], d[n][2]});
+
   
   return 0;
 }
