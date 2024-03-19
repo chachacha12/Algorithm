@@ -7,9 +7,9 @@
 using namespace std; 
 
 int n;
-int t[17];
-int p[17];
-int d[17];
+long long t[1500005];
+long long p[1500005];
+long long d[1500005];
 
 int main(void){
   ios::sync_with_stdio(0);
@@ -45,11 +45,8 @@ int main(void){
    }
  }
 
- cout<<d[1];
+  cout<<d[1];
   
-
-
-
 
   return 0;
 }
