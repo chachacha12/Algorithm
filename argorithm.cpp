@@ -6,10 +6,9 @@
 #include <vector>
 using namespace std; 
 
-int n;
-long long t[1500005];
-long long p[1500005];
-long long d[1500005];
+int t,n,m;
+int a[25];
+int d[10005];
 
 int main(void){
   ios::sync_with_stdio(0);
@@ -17,36 +16,48 @@ int main(void){
 
   /*
   테이블 정의:
-  d[i] = i일까지 했을때 얻을 수 있는 최대 이익(뒤부터)
+  d[i] = i원 만드는 방법의 수
+
 
   점화식:
-  
-  if(n+tn <= n+1)  //범위에 들어서 상담을 할지 말지 정할 수 있는 경우
-  d[i] = max( pi+d[d[i+ti]], d[i+1] )
-
-  
-  -시간오버로 아예 상담을 시도조차 못할경우
-  d[i] = d[i+1]
-
+  d[i] = d[i]+d[i-a[i]]
 
   */
 
- cin>>n;
+ cin>>t;
 
- for(int i=1; i<=n; i++){
-  cin>>t[i]>>p[i];
+ while(t--){
+  fill(d, d+10005,0);
+  cin>>n;
+
+    //동전 종류들 저장
+  for(int i=0; i<n; i++ ){
+    cin>>a[i];
+  }
+
+  cin>>m;
+
+  d[0] = 1;
+
+  for(int i=0; i<n; i++){   //동전갯수만큼 반복. 즉 새로운 동전이 추가될때마다 d[i]값은 갱신해줌
+    for(int j=a[i]; j<=m; j++){   
+      d[j] = d[j] + d[j-a[i]];  
+    }
+  }
+
+  cout<<d[m]<<"\n";
+
+
  }
 
- for(int i=n; i>=1; i--){
-   if(i+t[i] <= n+1) {
-      d[i] = max( p[i]+d[i+t[i]], d[i+1]);
-   }else{
-      d[i] = d[i+1];
-   }
- }
 
-  cout<<d[1];
-  
+
+
+ 
+
+
+
+
 
   return 0;
 }
