@@ -6,16 +6,14 @@
 #include <vector>
 using namespace std; 
 
+
 int n,m;
-
+string board[102];
+int vis[102][102];
 int dx[4] ={1,0,-1,0};
-int dy[4] = {0,1,0,-1};
-int board[505][505];
-bool vis[505][505];
-queue<pair<int,int>> q;
+int dy[4] ={0,1,0,-1};
+queue<pair<int, int>> q;
 
-int num;
-int maxsize;
 
 int main(void){ 
   ios::sync_with_stdio(0);
@@ -24,55 +22,39 @@ int main(void){
   cin>>n>>m;
 
   for(int i=0; i<n; i++){
-    for(int j=0; j<m; j++){
-      cin>>board[i][j];
-    }
+    cin>>board[i];
   }
 
-  for(int i=0; i<n; i++){
-    for(int j=0; j<m; j++){
-      if(board[i][j]==0 || vis[i][j]==1)
+  vis[0][0]=1;
+  q.push({0,0});
+  //cout<<"Eeee";
+
+  while(!q.empty()){
+    auto cur = q.front();
+    q.pop();
+
+    for(int i=0; i<4; i++){
+      int x = cur.first + dx[i];
+      int y = cur.second + dy[i];
+      
+      if(x<0 || x>=n || y<0 || y>=m)
         continue;
-
-       num++; //그림 갯수 1증가
-       int size=1;
+      if(board[x][y]=='0' || vis[x][y]>0)
+        continue;
       
-       vis[i][j]=1;
-       q.push({i,j});
-
-        while(!q.empty()){
-          auto cur = q.front();
-          q.pop();
-
-          for(int i=0; i<4; i++){
-              int x = cur.first + dx[i];
-              int y = cur.second + dy[i];
-
-              if(x<0 || x>=n || y<0 || y>=m)
-                continue;
-              
-              if(vis[x][y]==1 || board[x][y]==0)
-                continue;
-              
-              vis[x][y]=1;
-              q.push({x,y});
-              size++;
-          }
-        } 
-        maxsize = max(size, maxsize); //크기 최댓값 업뎃 
-      
+      vis[x][y] = vis[cur.first][cur.second]+1;
+      q.push({x,y});
     }
   }
 
-  if(num==0)
-    cout<<num<<'\n'<<"0";
-  else
-    cout<<num<<'\n'<<maxsize;
+  cout<< vis[n-1][m-1];
+
+  
 
   
 
 
-
+  
   return 0;
 }
 
