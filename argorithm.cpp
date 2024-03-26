@@ -6,52 +6,41 @@
 #include <vector>
 using namespace std; 
 
-
-int n,m;
-string board[102];
-int vis[102][102];
-int dx[4] ={1,0,-1,0};
-int dy[4] ={0,1,0,-1};
-queue<pair<int, int>> q;
-
+int n;
+int d[1000005];
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n>>m;
+  cin>>n;
 
-  for(int i=0; i<n; i++){
-    cin>>board[i];
-  }
+  
+  
+  /*
+  테이블: d[i] = 정수 i가 연산을 쓰는 최소 횟수
 
-  vis[0][0]=1;
-  q.push({0,0});
-  //cout<<"Eeee";
+  점화식: d[k] = d[k-1] +1
+  */
 
-  while(!q.empty()){
-    auto cur = q.front();
-    q.pop();
+ d[0] = 0;
+ d[1] = 0;
+ d[2] = 1;
+ d[3] = 1;
 
-    for(int i=0; i<4; i++){
-      int x = cur.first + dx[i];
-      int y = cur.second + dy[i];
-      
-      if(x<0 || x>=n || y<0 || y>=m)
-        continue;
-      if(board[x][y]=='0' || vis[x][y]>0)
-        continue;
-      
-      vis[x][y] = vis[cur.first][cur.second]+1;
-      q.push({x,y});
+
+ for(int i=4; i<1000002; i++){
+    
+    d[i] = d[i-1]+1;
+    if(i%2==0){
+      d[i] = min(d[i], d[i/2]+1);
     }
-  }
-
-  cout<< vis[n-1][m-1];
-
-  
-
-  
+    if(i%3==0){
+      d[i] = min(d[i], d[i/3]+1);
+    }
+ }
+ 
+  cout<<d[n];
 
 
   
