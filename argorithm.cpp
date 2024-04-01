@@ -6,27 +6,41 @@
 #include <vector>
 using namespace std; 
 
-int n,k;
-int a[15];
+
+int n;
+pair<long long, long long> p[100005];
+
+bool compare(pair<long long, long long> a,pair<long long, long long> b){
+  if(a.second == b.second){
+    return a.first <  b.first;
+  }
+  return a.second < b.second;
+}
+
+
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
-
-  cin>>n>>k;
+  
+  cin>>n;
   
   for(int i=0; i<n; i++){
-    cin>>a[i];
-  }
-  
-  int ans=0;
-  
-  for(int i=n-1; i>=0; i--){
-    
-    ans = ans + k/a[i];
-    k = k % a[i];
+    cin >> p[i].first>>p[i].second;
   }
 
+  sort(p, p+n, compare);
+  
+  int ans=1;
+  long long t = p[0].second;
+
+  for(int i=1; i<n; i++){
+    
+   if(p[i].first >= t ){
+        ans++;
+        t = p[i].second;
+    }
+  }
   cout<<ans;
 
 
