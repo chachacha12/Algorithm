@@ -7,37 +7,36 @@
 using namespace std; 
 
 int n;
-vector<int> arr(100005);
+int a[55];
+int b[55];
 
-bool compare(int a, int b){
-  return a>b;
-}
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
   cin>>n;
-  
-  for(int i=0; i<n; i++){
-    int a;
-    cin >> a;
-    arr.push_back(a);
-  }
-
-  sort(arr.begin(), arr.end(), compare);
-
-
-  int maxvalue=arr[0];
-  int result;
 
   for(int i=0; i<n; i++){
-    result = arr[i] * (i+1) ; 
-    maxvalue = max(maxvalue, result); 
+    cin>>a[i];
   }
 
-  cout<<maxvalue;
+  for(int i=0; i<n; i++){
+    cin>>b[i];
+  }
   
+  sort(a, a+n);
+
+  sort(b, b+n);
+
+  int result=0;
+  for(int i=0; i<n; i++){
+    result += a[i] * b[n-1-i]; 
+  }
+
+  cout<<result;
+
+
   return 0;
 }
 
