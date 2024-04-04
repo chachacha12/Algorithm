@@ -6,37 +6,41 @@
 #include <vector>
 using namespace std; 
 
-int n;
-int a[55];
-int b[55];
 
+int n,k;
+int w[100005];
+int v[100005];
+int d[105][100005];
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n;
+  cin>>n>>k;
 
-  for(int i=0; i<n; i++){
-    cin>>a[i];
+  for(int i=1; i<=n; i++){
+    cin>>w[i]>>v[i];
   }
 
-  for(int i=0; i<n; i++){
-    cin>>b[i];
-  }
+
+   for(int i=1; i<=n; i++){
+      for(int j=1;j<=k; j++){
+        if(w[i] > j){
+                  d[i][j] = d[i-1][j];
+            }else{
+              d[i][j] = max( d[i-1][j], v[i]+d[i-1][j-w[i]] );
+            }2
+      }
+         
+    }
+
+
+    
+ 
+
+
+  cout<<d[n][k];
   
-  sort(a, a+n);
-
-  sort(b, b+n);
-
-  int result=0;
-  for(int i=0; i<n; i++){
-    result += a[i] * b[n-1-i]; 
-  }
-
-  cout<<result;
-
-
   return 0;
 }
 
