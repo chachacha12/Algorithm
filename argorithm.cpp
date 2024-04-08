@@ -7,34 +7,36 @@
 using namespace std; 
 
 
-string s;
-int tmp, ans;
-int sign=1;
+int t, n;
+int a[1000005];
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>s;
+  cin>>t;
 
-  for(char c: s){
-    if(c=='+' || c=='-'){
-      ans = ans + tmp * sign;
-      if(c=='-'){
-        sign = -1;
-      }
-      tmp=0;
-    }else{
-      tmp = tmp * 10;
-      tmp = tmp + c-'0';
+  while(t--){
+
+    cin>>n;
+
+    for(int i=0; i<n; i++){
+      cin>>a[i];
     }
+    
+    int mx = a[n-1];
+    long long sum=0;
+
+    for(int i=n-2; i>=0; i--){  
+      if(a[i] < mx){  
+        sum = sum + (mx-a[i]);
+      }else{
+        mx = a[i];
+      }
+    }
+    cout<<sum<<'\n';
   }
-  ans = ans + tmp * sign;
-
-  cout<<ans;
   
-
-
   
   return 0;
 }
