@@ -7,33 +7,33 @@
 using namespace std; 
 
 
-int n;
-int p[1005];
-
+string s;
+int tmp, ans;
+int sign=1;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n;
-  
-  for(int i=0; i<n; i++){
-    cin>>p[i];
-  }
+  cin>>s;
 
-  sort(p, p+n); //오름차순 정렬
-
-  int ans=0;
-  int sum=0;
-  for(int i=0; i<n; i++){
-    sum = sum + p[i]; 
-    ans += sum;
+  for(char c: s){
+    if(c=='+' || c=='-'){
+      ans = ans + tmp * sign;
+      if(c=='-'){
+        sign = -1;
+      }
+      tmp=0;
+    }else{
+      tmp = tmp * 10;
+      tmp = tmp + c-'0';
+    }
   }
+  ans = ans + tmp * sign;
 
   cout<<ans;
-
-
   
+
 
   
   return 0;
