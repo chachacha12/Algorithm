@@ -7,39 +7,34 @@
 using namespace std; 
 
 
-int n,k;
-int w[100005];
-int v[100005];
-int d[105][100005];
+int n;
+int p[1005];
+
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n>>k;
-
-  for(int i=1; i<=n; i++){
-    cin>>w[i]>>v[i];
+  cin>>n;
+  
+  for(int i=0; i<n; i++){
+    cin>>p[i];
   }
 
+  sort(p, p+n); //오름차순 정렬
 
-   for(int i=1; i<=n; i++){
-      for(int j=1;j<=k; j++){
-        if(w[i] > j){
-                  d[i][j] = d[i-1][j];
-            }else{
-              d[i][j] = max( d[i-1][j], v[i]+d[i-1][j-w[i]] );
-            }2
-      }
-         
-    }
+  int ans=0;
+  int sum=0;
+  for(int i=0; i<n; i++){
+    sum = sum + p[i]; 
+    ans += sum;
+  }
 
-
-    
- 
+  cout<<ans;
 
 
-  cout<<d[n][k];
+  
+
   
   return 0;
 }
