@@ -7,14 +7,10 @@
 using namespace std; 
 
 int n;
-vector<int> p;
-vector<int> m;
+int x,y;
+int ans;
 
-long long sum;
-
-bool compare(int a, int b){
-  return a>b;
-}
+vector<pair<int, int>> v;
 
 
 int main(void){ 
@@ -23,54 +19,40 @@ int main(void){
 
   cin>>n;
 
+
   for(int i=0; i<n; i++){
-    int num;
-    cin>>num;
-    if(num>0)
-      p.push_back(num);
-    else
-      m.push_back(num);
+    int a,b;
+    cin>>a>>b;
+    v.push_back({a,b});
   }
+
+  sort(v.begin(), v.end());
+
+
+  int lastx=v[0].first, lasty=v[0].second;
   
-  sort(p.begin(), p.end(), compare); //내림차순
-  sort(m.begin(), m.end()); //오름차순
-
-  //양수 처리
-  for(int i=0; i<p.size(); i+=2){
+  for(int i=1; i<n; i++){
     
-    while(p.back()==1){
-      sum+=1;
-      p.pop_back();
-      //cout<<"1sum: "<<sum<<'\n';
+    int x = v[i].first;
+    int y = v[i].second;
+
+    if(lasty >= x ){
+      if(lasty < y){
+        lasty = y;
+      }
+    }else{
+      ans+= lasty - lastx;
+      lastx = x;
+      lasty = y;
     }
+  }
 
-    if(p.size()%2!=0){  //홀수면
-      sum+= p.back();
-      p.pop_back();
-      //cout<<"2sum: "<<sum<<'\n';
-    }
-    if(p.size()!=0){
+  ans += lasty - lastx;
 
-      sum+=p[i]*p[i+1];
-    }
-  
-    //cout<<"3sum: "<<sum<<'\n';
-  } 
+  cout<<ans;
 
-  //음수처리
-  for(int i=0; i<m.size(); i+=2){
-    
-    if(m.size()%2!=0){  //홀수면
-      sum+= m.back();
-      m.pop_back();
-    }
+     
 
-    sum+=m[i]*m[i+1];
-    //cout<<"sum: "<<sum<<'\n';
-  } 
-
-
-  cout<<sum;
 
   
   return 0;
