@@ -6,53 +6,54 @@
 #include <vector>
 using namespace std; 
 
-int n;
-int x,y;
-int ans;
 
-vector<pair<int, int>> v;
+#define X first
+#define Y second
 
+int dx[4] = {1,0,-1,0};
+int dy[4] = {0,1,0,-1};
+
+queue<pair<int, int>> q;
+
+string board[102];
+int vis[102][102];
+
+int n,m;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n;
-
+  cin>>n>>m;
 
   for(int i=0; i<n; i++){
-    int a,b;
-    cin>>a>>b;
-    v.push_back({a,b});
+    cin>>board[i];
   }
 
-  sort(v.begin(), v.end());
 
+  q.push({0,0});
+  vis[0][0] = 1;
 
-  int lastx=v[0].first, lasty=v[0].second;
-  
-  for(int i=1; i<n; i++){
+  while(!q.empty()){
+    auto cur = q.front();
+    q.pop();
     
-    int x = v[i].first;
-    int y = v[i].second;
+    for(int i=0; i<4; i++){
+      int x = cur.X+dx[i];
+      int y = cur.Y+dy[i];
 
-    if(lasty >= x ){
-      if(lasty < y){
-        lasty = y;
-      }
-    }else{
-      ans+= lasty - lastx;
-      lastx = x;
-      lasty = y;
+      if(x<0 || x >= n || y<0 || y>=m  )
+        continue;
+
+      if(board[x][y] == '0' || vis[x][y] > 0 )
+        continue;
+      
+      q.push({x,y});
+      vis[x][y] = vis[cur.X][cur.Y]+1;
     }
   }
 
-  ans += lasty - lastx;
-
-  cout<<ans;
-
-     
-
+   cout<<vis[n-1][m-1];
 
   
   return 0;
