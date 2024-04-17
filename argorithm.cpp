@@ -6,10 +6,39 @@
 #include <vector>
 using namespace std; 
 
-
 int n,m;
-
 int a[100005];
+
+int check(int st, int en, int num){
+  int mid;
+  int vis=0;
+
+  //1 2 3 4 5
+
+  while(1){   
+      mid = (st+en)/2; 
+      //cout<<"mid: "<<mid<<"\n";
+      
+      if(a[mid]<num){ 
+        st = mid+1;
+
+      }else if(a[mid]>num){
+        en = mid-1; 
+
+      }else if(a[mid]==num){
+        vis=1;
+        break;
+      }
+      if(en<st){
+          vis=0;
+          break;
+      }
+  }
+
+  //cout<<"vis:"<<vis<<"\n";
+  return vis;
+}
+
 
 
 int main(void){ 
@@ -25,17 +54,13 @@ int main(void){
   sort(a,a+n);
 
   cin>>m;
-
+  
   int num;
   for(int i=0; i<m; i++){
     cin>>num;
 
-    cout<<binary_search(a, a+n, num)<<"\n";
+    cout<< check(0, n-1, num)<<"\n";
   }
-
-
-  
-  
   
   return 0;
 }
