@@ -6,39 +6,19 @@
 #include <vector>
 using namespace std; 
 
+
+
 int n,m;
-int a[100005];
+int a[500005];
 
-int check(int st, int en, int num){
-  int mid;
-  int vis=0;
 
-  //1 2 3 4 5
+int check(int target){
 
-  while(1){   
-      mid = (st+en)/2; 
-      //cout<<"mid: "<<mid<<"\n";
-      
-      if(a[mid]<num){ 
-        st = mid+1;
+  int* low = lower_bound(a, a+n, target);  //정렬된 배열에서 target값이 정렬 유지하면서 들어갈 수 있는 곳의 가장 아래 주소값
+  int* upper = upper_bound(a, a+n, target); //정렬된 배열에서 target값이 정렬 유지하면서 들어갈 수 있는 곳의 가장 윗 주소값
 
-      }else if(a[mid]>num){
-        en = mid-1; 
-
-      }else if(a[mid]==num){
-        vis=1;
-        break;
-      }
-      if(en<st){
-          vis=0;
-          break;
-      }
-  }
-
-  //cout<<"vis:"<<vis<<"\n";
-  return vis;
+  return upper-low; //즉 배열에서 target값이 나온 횟수와 같음
 }
-
 
 
 int main(void){ 
@@ -50,18 +30,19 @@ int main(void){
   for(int i=0; i<n; i++){
     cin>>a[i];
   }
+  
+  sort(a, a+n);
 
-  sort(a,a+n);
-
+  int m;
   cin>>m;
-  
-  int num;
-  for(int i=0; i<m; i++){
-    cin>>num;
 
-    cout<< check(0, n-1, num)<<"\n";
+  int t;
+  while(m--){
+    cin>>t;
+
+    cout<<check(t)<<" ";
   }
-  
+
   return 0;
 }
 
