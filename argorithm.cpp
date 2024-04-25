@@ -6,42 +6,54 @@
 #include <vector>
 using namespace std; 
 
-int n,m;
-int a[500005];
-int b[500005];
+int m,n;
+vector<pair<int, int>> x[102];
 
-vector<int> v;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n>>m;
-
-  for(int i=0; i<n; i++){
-    cin>>a[i];
-  }
+  cin>>m>>n;
 
   for(int i=0; i<m; i++){
-    cin>>b[i];
-  }
-
-  sort(a,a+n);
-  sort(b, b+m);
-
-
-  for(int i=0; i<n; i++){
-    if(!binary_search(b,b+m,a[i])){
-      v.push_back(a[i]);
+    for(int j=0; j<n; j++){
+      int num;
+      cin>>num;
+      x[i].push_back({num,j});  //그 값과 그 값의 인덱스순서를 저장
     }
   }
 
-   cout<<v.size()<<"\n";
-  for(int i=0; i<v.size();i++){
-    cout<<v[i]<<" ";
+  for(int i=0; i<m; i++){
+    sort(x[i].begin(), x[i].end());
   }
 
+  int sum=0;
 
+  for(int i=0; i<m-1; i++){
+    for(int j=i+1; j<m; j++){
+      for(int k=0; k<n; k++){
+        
+        pair<int,int> a = x[i][k];
+        pair<int,int> b = x[j][k];
+
+        if( a.second != b.second   ){
+            break;
+        }
+
+        if(k==n-1){
+          sum++;
+          break;
+        }
+
+        if( (x[i][k].first < x[i][k+1].first) != (x[j][k].first < x[j][k+1].first) ){
+          break;
+        }
+      }
+    }
+  }
+
+  cout<<sum;
 
 
 }
