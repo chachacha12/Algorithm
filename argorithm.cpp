@@ -6,55 +6,50 @@
 #include <vector>
 using namespace std; 
 
-int m,n;
-vector<pair<int, int>> x[102];
-
+int n;
+int arr[100005];
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>m>>n;
+  cin>>n;
 
-  for(int i=0; i<m; i++){
-    for(int j=0; j<n; j++){
-      int num;
-      cin>>num;
-      x[i].push_back({num,j});  //그 값과 그 값의 인덱스순서를 저장
+  for(int i=0; i<n; i++){
+    cin>>arr[i];
+  }
+
+
+  int a = 1e9+1;
+  int b = 1e9+1;
+
+
+  for(int i=0; i<n; i++){ 
+    int index = lower_bound(arr, arr+n, -arr[i]) - arr;  //반대되는 값이 들어갈 수 있는 첫 자리값
+
+    if(index+1<n && index+1 != i && abs(arr[i]+arr[index+1]) < abs(a+b) ){
+    
+      a = arr[i];
+      b = arr[index+1];
+    }
+    if(index<n && index != i && abs(arr[i]+arr[index]) < abs(a+b) ){
+    
+      a = arr[i];
+      b = arr[index];
+    }
+    if(index !=0 && index-1 != i && abs(arr[i]+arr[index-1]) < abs(a+b) ){
+     
+      a = arr[i];
+      b = arr[index-1];
     }
   }
 
-  for(int i=0; i<m; i++){
-    sort(x[i].begin(), x[i].end());
-  }
 
-  int sum=0;
 
-  for(int i=0; i<m-1; i++){
-    for(int j=i+1; j<m; j++){
-      for(int k=0; k<n; k++){
-        
-        pair<int,int> a = x[i][k];
-        pair<int,int> b = x[j][k];
-
-        if( a.second != b.second   ){
-            break;
-        }
-
-        if(k==n-1){
-          sum++;
-          break;
-        }
-
-        if( (x[i][k].first < x[i][k+1].first) != (x[j][k].first < x[j][k+1].first) ){
-          break;
-        }
-      }
-    }
-  }
-
-  cout<<sum;
-
+  if(a>b) swap(a,b);
+    
+  cout<<a<<" "<<b;
+ 
 
 }
 
