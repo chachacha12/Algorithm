@@ -8,27 +8,45 @@ using namespace std;
 
 
 int n;
-int d[1000005];
+int d[305][2];
+int a[305];
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
+ /*
+ 테이블: d[i][0] = i번째까지 갔을때 이전계단을 밟았을때 최댓값 (i번째는 무조건 밟음)
+        d[i][1] = i번째까지 갔을때 이전계단을 안 밟았을때 최댓값 (i번째는 무조건 밟음)
+
+ 점화식: 
+
+ */
+
+
+
   cin>>n;
-
-  d[1]=0;
-  for(int i=2; i<=n; i++){
-    d[i] = d[i-1]+1;
-
-    if(i%3==0){
-      d[i] = min(d[i/3]+1,d[i]);
-    }
-    if(i%2==0){
-      d[i] = min(d[i/2]+1,d[i]);
-    }
+  for(int i=1; i<=n; i++){
+    cin>>a[i];
   }
 
-  cout<<d[n];
+  d[1][0] = a[1];
+  d[1][1] = a[1];
+
+  d[2][0] = a[1]+a[2];
+  d[2][1] = a[2];
+
+
+
+  for(int i=3; i<=n; i++){
+     d[i][0] = d[i-1][1] + a[i];
+     d[i][1] = max(d[i-2][0], d[i-2][1] )+ a[i];
+  }
+
+  cout<<max(d[n][0], d[n][1]);
+
+
+
 
 }
 
