@@ -7,33 +7,32 @@
 using namespace std; 
 
 
-int n,k;
-int a[15];
+int n;
+int a[105];
 int ans;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>n>>k;
+  cin>>n;
 
-  for(int i=1; i<=n; i++){
+  for(int i=0; i<n; i++){
     cin>>a[i];
   }
 
-  for(int i=n; i>0; i--){
-    while(1){ 
-      if(a[i]<=k){
-        k = k-a[i];
-        ans++;
-      }else{
-        break;
+  for(int i=n-1; i>=0; i--){
+
+     if(i!=0 ){
+        while(a[i] <= a[i-1] ){
+          a[i-1]--;
+          ans++;
+        }
       }
-    } 
+    
   }
 
   cout<<ans;
-
 
 
 }
