@@ -6,40 +6,33 @@
 #include <vector>
 using namespace std; 
 
-int n;
-int d[1005][3];
-int r[1005];
-int g[1005];
-int b[1005];
+
+int n,k;
+int a[15];
+int ans;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
- /*
- 테이블: 
+  cin>>n>>k;
 
-
- 점화식: 
-
- */
-
-  cin>>n;
   for(int i=1; i<=n; i++){
-    cin>>r[i]>>g[i]>>b[i];
+    cin>>a[i];
   }
 
-  d[1][0] = r[1];
-  d[1][1] = g[1];
-  d[1][2] = b[1];
-
-  for(int i=2; i<=n; i++){
-    d[i][0]  = min(d[i-1][1], d[i-1][2]) +r[i];
-    d[i][1]  = min(d[i-1][0], d[i-1][2]) +g[i];
-    d[i][2]  = min(d[i-1][1], d[i-1][0]) +b[i];
+  for(int i=n; i>0; i--){
+    while(1){ 
+      if(a[i]<=k){
+        k = k-a[i];
+        ans++;
+      }else{
+        break;
+      }
+    } 
   }
 
-  cout<<min({d[n][0], d[n][1],d[n][2]});
+  cout<<ans;
 
 
 
