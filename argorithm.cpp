@@ -6,40 +6,42 @@
 #include <vector>
 using namespace std; 
 
-int d[1005][1005];
+
+/*
+테이블: d[i] = 숫자i일때 최소 갯수
+
+점화식: d[k] = min(d[k-1제곱]+1, d[k-2제곱]+1, d[k-3제곱]+1,,,,)
+*/
+
+
+int d[100005];
+int n;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  string a;
-  string b;
+  cin>>n;
 
-  cin>>a>>b;
+  d[0] = 0;
+  d[1] = 1;
+  d[2] = 2;
+  int a =1;
 
-  for(int i=0; i<a.length(); i++){
-    d[i][0]=0;
-  }
-  for(int i=0; i<b.length(); i++){
-    d[0][i]=0;
-  }
-
-
-  for(int i=1; i<a.length()+1; i++){
-    for(int j=1; j<b.length()+1; j++){
-      if(a[i-1]==b[j-1]){
-        d[i][j] =  d[i-1][j-1]+1;
-        //cout<<"d[i][j]: "<<d[i][j]<<"\n";
-      }else{
-         d[i][j] = max(d[i-1][j],d[i][j-1]);
-         //cout<<"d[i][j]: "<<d[i][j]<<"\n";
+  for(int i=3; i<=100000; i++){
+    if(i >= a*a &&  i < (a+1)*(a+1) ){
+      int max_v=100000;
+      for(int j=1; j<=a; j++ ){
+        d[i] = d[i-j*j]+1;    
+        d[i] = min(max_v, d[i]);
+        max_v = d[i];
       }
+    }else{
+      a++;
+      i--;
     }
   }
-
-  cout<<d[a.length()][b.length()];
-
-
+  cout<<d[n];
 }
 
 
