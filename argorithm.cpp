@@ -7,47 +7,44 @@
 using namespace std; 
 
 
-string s;
+int n,m;
+string s[1005];
+
+int d[1005][1005];
+int ans=0;
 
 int main(void){ 
   ios::sync_with_stdio(0);
   cin.tie(0); 
 
-  cin>>s;
-  int zero=0;
-  int one=0;
-  char flag;
+  cin>>n>>m;
 
-  flag = s[0];
-  for(int i=1; i<s.length(); i++){
-    if(s[i] =='0'){
-      if(flag=='1'){
-        flag='0';
-        one++;
-      }
-    }else{
-      if(flag=='0')  //이전까지 0이었으면
-      {
-        flag='1';
-        zero++;    
+  for(int i=0; i<n; i++){
+    cin>>s[i];
+  }
+
+  for(int i=0; i<n; i++){
+    if(s[i][0]=='1')
+      d[i][0] = 1;
+      ans = max(ans, d[i][0]);
+  }
+
+  for(int j=0; j<m; j++){
+    if(s[0][j]=='1')
+      d[0][j] = 1;
+      ans = max(ans, d[0][j]);
+  }
+
+  for(int i=1; i<n; i++){
+    for(int j=1; j<m; j++){
+      if(s[i][j]=='1'){
+        d[i][j] = min(d[i-1][j-1],  min(d[i-1][j], d[i][j-1]))+1;
+        ans = max(ans, d[i][j]);
       }
     }
   }
-  
-  if(flag=='0'){
-    zero++;
-  }else{
-    one++;
-  }
 
-
-  if((zero==0 && one==1) || (one==0 && zero==1)){
-    cout<<'0';
-  }else{
-    cout<<min(one, zero);
-  }
-
-  
+  cout<<ans*ans;
 
 }
 
