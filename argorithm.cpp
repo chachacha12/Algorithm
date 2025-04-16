@@ -1,61 +1,41 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <stack>
-#include <queue>
+#include <string>
 #include <vector>
-using namespace std; 
+#include <algorithm>
+using namespace std;
 
+int solution(vector<int> mats, vector<vector<string>> park) {
+    int R = park.size();           // 공원의 행 개수
+    int C = park[0].size();        // 공원의 열 개수
 
-int n,m;
-string s[1005];
-
-int d[1005][1005];
-int ans=0;
-
-int main(void){ 
-  ios::sync_with_stdio(0);
-  cin.tie(0); 
-
-  cin>>n>>m;
-
-  for(int i=0; i<n; i++){
-    cin>>s[i];
-  }
-
-  for(int i=0; i<n; i++){
-    if(s[i][0]=='1')
-      d[i][0] = 1;
-      ans = max(ans, d[i][0]);
-  }
-
-  for(int j=0; j<m; j++){
-    if(s[0][j]=='1')
-      d[0][j] = 1;
-      ans = max(ans, d[0][j]);
-  }
-
-  for(int i=1; i<n; i++){
-    for(int j=1; j<m; j++){
-      if(s[i][j]=='1'){
-        d[i][j] = min(d[i-1][j-1],  min(d[i-1][j], d[i][j-1]))+1;
-        ans = max(ans, d[i][j]);
-      }
+    // 가장 큰 돗자리부터 확인하기 위해 내림차순 정렬
+    sort(mats.begin(), mats.end(), greater<int>());
+    
+    // mats에 있는 각 돗자리 크기에 대하여 검사
+    for (int size : mats) {
+        // 만약 돗자리 크기가 park 전체보다 크면 skip
+        if (size > R || size > C) continue;
+        
+        // 가능한 시작 행, 열 위치에 대해 검사
+        for (int i = 0; i <= R - size; i++) {
+            for (int j = 0; j <= C - size; j++) {
+                bool canPlace = true;
+                // 현재 시작점 (i, j)에서 size x size 영역 검증
+                for (int x = i; x < i + size && canPlace; x++) {
+                    for (int y = j; y < j + size; y++) {
+                        if (park[x][y] != "-1") {  // 해당 칸에 사람이 있으면
+                            canPlace = false;
+                            break;
+                        }
+                    }
+                }
+                // 만약 영역이 모두 비어 있다면 해당 크기를 반환
+                if (canPlace) {
+                    return size;
+                }
+            }
+        }
     }
-  }
-
-  cout<<ans*ans;
-
+    
+    // 모든 크기에서 찾지 못하면 -1 반환
+    return -1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
