@@ -1,54 +1,40 @@
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <limits>
+
 using namespace std;
 
-long long solution(int cap, int n, vector<int> deliveries, vector<int> pickups) {
-    long long answer = 0;
-    int dPos = n - 1;  // 마지막 배달 필요 집 인덱스 (0-based)
-    int pPos = n - 1;  // 마지막 수거 필요 집 인덱스
-
-    // 포인터를 집 번호 1..n으로 변환하려면 index+1을 사용
-    while (dPos >= 0 || pPos >= 0) {
-        // 다음 배달할 집 찾기
-        while (dPos >= 0 && deliveries[dPos] == 0) {
-            dPos--;
-        }
-        // 다음 수거할 집 찾기
-        while (pPos >= 0 && pickups[pPos] == 0) {
-            pPos--;
-        }
-        // 모두 끝나면 종료
-        if (dPos < 0 && pPos < 0) break;
-
-        // 이번 투어에서 갈 가장 먼 집 번호
-        int farthest = max(dPos, pPos) + 1;
-        answer += 2LL * farthest;
-
-        // 이 투어에서 남은 배달·수거 용량
-        int remainDel = cap;
-        int remainPick = cap;
-
-        // 배달 처리 (뒤에서 앞으로)
-        while (remainDel > 0 && dPos >= 0) {
-            if (deliveries[dPos] == 0) {
-                dPos--;
-                continue;
+int solution(vector<vector<int>> info, int n, int m) {
+    const int INF = numeric_limits<int>::max() / 2;
+    // dp[b] = 최소 A의 흔적 합으로 B의 흔적 합이 b가 될 수 있는 경우
+    vector<int> dp(m, INF), newdp(m, INF);
+    dp[0] = 0;
+    for (auto &item : info) {
+        int a = item[0], b = item[1];
+        fill(newdp.begin(), newdp.end(), INF);
+        for (int sumB = 0; sumB < m; ++sumB) {
+            if (dp[sumB] == INF) continue;
+            int sumA = dp[sumB];
+            // 1) A가 이 물건을 훔치는 경우
+            int na = sumA + a;
+            if (na < n) {
+                // B 흔적은 변하지 않음
+                newdp[sumB] = min(newdp[sumB], na);
             }
-            int take = min(deliveries[dPos], remainDel);
-            deliveries[dPos] -= take;
-            remainDel -= take;
-        }
-        // 수거 처리 (뒤에서 앞으로)
-        while (remainPick > 0 && pPos >= 0) {
-            if (pickups[pPos] == 0) {
-                pPos--;
-                continue;
+            // 2) B가 이 물건을 훔치는 경우
+            int nb = sumB + b;
+            if (nb < m) {
+                // A 흔적은 변하지 않음
+                newdp[nb] = min(newdp[nb], sumA);
             }
-            int take = min(pickups[pPos], remainPick);
-            pickups[pPos] -= take;
-            remainPick -= take;
         }
+        dp.swap(newdp);
     }
-
-    return answer;
+    // 가능한 B 흔적 합 중 A 흔적 합의 최소값을 찾는다
+    int answer = INF;
+    for (int sumB = 0; sumB < m; ++sumB) {
+        answer = min(answer, dp[sumB]);
+    }
+    return (answer == INF ? -1 : answer);
 }
