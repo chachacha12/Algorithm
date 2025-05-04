@@ -1,44 +1,45 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
-typedef long long ll;
-
-bool can_solve_all(int level, const vector<int>& diffs, const vector<int>& times, ll limit) {
-    ll total_time = 0;
-    int n = diffs.size();
-    for (int i = 0; i < n; ++i) {
-        int diff = diffs[i];
-        int time_cur = times[i];
-        int time_prev = (i == 0 ? 0 : times[i - 1]);
-
-        if (diff <= level) {
-            total_time += time_cur;
-        } else {
-            ll fails = diff - level;
-            total_time += (time_cur + time_prev) * fails + time_cur;
+int solution(vector<int> schedules, vector<vector<int>> timelogs, int startday) {
+    int answer = 0;
+    int n = schedules.size();
+    
+    for (int i = 0; i < n; i++) {
+        bool qualified = true;
+        int allowedTime = schedules[i] + 10; // 출근 인정 시각 (희망 시각 + 10분)
+        
+        // 시각이 정수로 표현되므로 분이 60을 넘으면 시간 조정
+        if (allowedTime % 100 >= 60) {
+            allowedTime = allowedTime + 40; // 60분 = 1시간 -> +100, -60 = +40
         }
-
-        if (total_time > limit) return false;
-    }
-    return true;
-}
-
-int solution(vector<int> diffs, vector<int> times, long long limit) {
-    int left = 1, right = 100000;
-    int answer = 100000;
-
-    while (left <= right) {
-        int mid = (left + right) / 2;
-
-        if (can_solve_all(mid, diffs, times, limit)) {
-            answer = mid;
-            right = mid - 1; // 더 낮은 숙련도 시도
-        } else {
-            left = mid + 1;  // 더 높은 숙련도 필요
+        
+        // 일주일 동안의 출근 기록 확인
+        for (int day = 0; day < 7; day++) {
+            // 현재 요일 계산 (1=월, ..., 7=일)
+            int currentDay = (startday + day - 1) % 7 + 1;
+            
+            // 토요일(6)이나 일요일(7)이면 건너뛰기
+            if (currentDay == 6 || currentDay == 7) {
+                continue;
+            }
+            
+            // 직원의 해당 일자 출근 시각
+            int actualTime = timelogs[i][day];
+            
+            // 출근 인정 시각보다 늦게 출근했으면 자격 없음
+            if (actualTime > allowedTime) {
+                qualified = false;
+                break;
+            }
+        }
+        
+        // 모든 평일에 지각하지 않았으면 상품 받을 자격 있음
+        if (qualified) {
+            answer++;
         }
     }
-
+    
     return answer;
 }
