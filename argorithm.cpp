@@ -1,45 +1,41 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-int solution(vector<int> schedules, vector<vector<int>> timelogs, int startday) {
-    int answer = 0;
-    int n = schedules.size();
+int solution(vector<int> mats, vector<vector<string>> park) {
+    int R = park.size();           // 공원의 행 개수
+    int C = park[0].size();        // 공원의 열 개수
+
+    // 가장 큰 돗자리부터 확인하기 위해 내림차순 정렬
+    sort(mats.begin(), mats.end(), greater<int>());
     
-    for (int i = 0; i < n; i++) {
-        bool qualified = true;
-        int allowedTime = schedules[i] + 10; // 출근 인정 시각 (희망 시각 + 10분)
+    // mats에 있는 각 돗자리 크기에 대하여 검사
+    for (int size : mats) {
+        // 만약 돗자리 크기가 park 전체보다 크면 skip
+        if (size > R || size > C) continue;
         
-        // 시각이 정수로 표현되므로 분이 60을 넘으면 시간 조정
-        if (allowedTime % 100 >= 60) {
-            allowedTime = allowedTime + 40; // 60분 = 1시간 -> +100, -60 = +40
-        }
-        
-        // 일주일 동안의 출근 기록 확인
-        for (int day = 0; day < 7; day++) {
-            // 현재 요일 계산 (1=월, ..., 7=일)
-            int currentDay = (startday + day - 1) % 7 + 1;
-            
-            // 토요일(6)이나 일요일(7)이면 건너뛰기
-            if (currentDay == 6 || currentDay == 7) {
-                continue;
+        // 가능한 시작 행, 열 위치에 대해 검사
+        for (int i = 0; i <= R - size; i++) {
+            for (int j = 0; j <= C - size; j++) {
+                bool canPlace = true;
+                // 현재 시작점 (i, j)에서 size x size 영역 검증
+                for (int x = i; x < i + size && canPlace; x++) {
+                    for (int y = j; y < j + size; y++) {
+                        if (park[x][y] != "-1") {  // 해당 칸에 사람이 있으면
+                            canPlace = false;
+                            break;
+                        }
+                    }
+                }
+                // 만약 영역이 모두 비어 있다면 해당 크기를 반환
+                if (canPlace) {
+                    return size;
+                }
             }
-            
-            // 직원의 해당 일자 출근 시각
-            int actualTime = timelogs[i][day];
-            
-            // 출근 인정 시각보다 늦게 출근했으면 자격 없음
-            if (actualTime > allowedTime) {
-                qualified = false;
-                break;
-            }
-        }
-        
-        // 모든 평일에 지각하지 않았으면 상품 받을 자격 있음
-        if (qualified) {
-            answer++;
         }
     }
     
-    return answer;
+    // 모든 크기에서 찾지 못하면 -1 반환
+    return -1;
 }
