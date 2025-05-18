@@ -1,50 +1,54 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <algorithm>
 
 using namespace std;
 
-// HH:MM 형태의 시간을 분 단위로 변환하는 함수
-int timeToMinutes(const string& time) {
-    int hours = stoi(time.substr(0, 2));  // 시간 부분 추출 후 정수 변환
-    int minutes = stoi(time.substr(3, 2)); // 분 부분 추출 후 정수 변환
-    return hours * 60 + minutes;  // 전체 분 단위로 변환하여 반환
-}
+vector<int> discountRates = {10, 20, 30, 40}; // 가능한 할인율 목록
+int maxSubscribers = 0;  // 최대 가입자 수
+int maxRevenue = 0;      // 최대 매출액
 
-int solution(vector<vector<string>> book_time) {
-    vector<pair<int, int>> times; // {시작 시간, 종료 시간}을 저장할 벡터
+// 할인율 조합을 생성하고 계산하는 재귀 함수
+void calculateMaxResult(int index, vector<int>& emoticons, vector<int>& discountCombination, vector<vector<int>>& users) {
+    if (index == emoticons.size()) { // 모든 이모티콘의 할인율을 설정했다면
+        int subscribers = 0; // 현재 할인율에서의 가입자 수
+        int revenue = 0;     // 현재 할인율에서의 총 매출액
 
-    // 예약 시간을 분 단위로 변환하여 저장
-    for (const auto& booking : book_time) {
-        int start = timeToMinutes(booking[0]); // 시작 시간 변환
-        int end = timeToMinutes(booking[1]) + 10; // 종료 시간 변환 + 청소 시간(10분)
-        times.push_back({start, end});
-    }
+        // 모든 사용자에 대해 구매 여부를 판단
+        for (auto& user : users) {
+            int userDiscountThreshold = user[0]; // 사용자가 원하는 최소 할인율
+            int userPriceThreshold = user[1];    // 사용자가 가입을 고려하는 가격 기준
 
-    // 시작 시간을 기준으로 정렬 (같은 경우 종료 시간 기준 정렬)
-    sort(times.begin(), times.end());
+            int totalCost = 0;
+            for (int i = 0; i < emoticons.size(); i++) {
+                if (discountCombination[i] >= userDiscountThreshold) { // 사용자가 원하는 할인율 이상이면 구매
+                    totalCost += emoticons[i] * (100 - discountCombination[i]) / 100;
+                }
+            }
 
-    vector<int> rooms; // 현재 사용 중인 객실들의 종료 시간을 저장하는 벡터
-
-    for (const auto& time : times) {
-        int start = time.first, end = time.second;
-        bool assigned = false;
-
-        // 기존 방 중에서 사용 가능한 방이 있는지 확인
-        for (int& roomEnd : rooms) {
-            if (roomEnd <= start) { // 종료된 방이 있다면 새로운 예약을 배정
-                roomEnd = end;
-                assigned = true;
-                break;
+            if (totalCost >= userPriceThreshold) { // 사용자가 가입 기준을 넘으면 이모티콘 구매 대신 서비스 가입
+                subscribers++;
+            } else {
+                revenue += totalCost; // 이모티콘을 구매한 경우 매출액에 추가
             }
         }
 
-        // 기존 방 중 사용 가능한 것이 없다면 새로운 방 추가
-        if (!assigned) {
-            rooms.push_back(end);
+        // 최적의 경우 갱신 (가입자 수 최우선, 그다음 매출액)
+        if (subscribers > maxSubscribers || (subscribers == maxSubscribers && revenue > maxRevenue)) {
+            maxSubscribers = subscribers;
+            maxRevenue = revenue;
         }
+        return;
     }
 
-    return rooms.size(); // 필요한 최소 객실 수 반환
+    // 현재 이모티콘에 대해 가능한 할인율을 설정하고 다음 이모티콘 처리
+    for (int rate : discountRates) {
+        discountCombination[index] = rate;
+        calculateMaxResult(index + 1, emoticons, discountCombination, users);
+    }
+}
+
+vector<int> solution(vector<vector<int>> users, vector<int> emoticons) {
+    vector<int> discountCombination(emoticons.size()); // 이모티콘별 할인율 저장
+    calculateMaxResult(0, emoticons, discountCombination, users); // 완전 탐색 시작
+    return {maxSubscribers, maxRevenue}; // 최적의 가입자 수와 매출액 반환
 }
