@@ -1,87 +1,63 @@
 #include <string>
 #include <vector>
-#include <sstream>
-#include <set>
-#include <algorithm>  // <-- 이 줄을 추가합니다
+#include <cmath>
 using namespace std;
+using ll = long long;
 
-// 주어진 문자열 s를 base 진법으로 해석하여 정수로 반환.
-// 만약 s에 base 이상의 숫자 문자가 있으면 -1 반환.
-int parseInBase(const string &s, int base) {
-    int v = 0;
-    for (char c : s) {
-        if (c < '0' || c > '9') return -1;
-        int d = c - '0';
-        if (d >= base) return -1;
-        v = v * base + d;
-    }
-    return v;
+// x^2 ≤ val을 만족하는 최대 정수 y를 반환 (floor of sqrt(val))
+ll isqrt_floor(ll val) {
+    ll y = (ll)floor(sqrt((double)val));
+    // 보정: y가 너무 작으면 늘려주기
+    while ((y+1)*(y+1) <= val) ++y;
+    while (y*y > val) --y;
+    return y;
 }
 
-// 정수 v를 base 진법 문자열로 변환
-string toBase(int v, int base) {
-    if (v == 0) return "0";
-    string s;
-    while (v > 0) {
-        int d = v % base;
-        s.push_back(char('0' + d));
-        v /= base;
-    }
-    reverse(s.begin(), s.end());
-    return s;
+// x^2 ≥ val을 만족하는 최소 정수 y를 반환 (ceil of sqrt(val))
+ll isqrt_ceil(ll val) {
+    if (val <= 0) return 0;
+    ll y = (ll)floor(sqrt((double)val));
+    // 보정: y가 너무 작으면 늘려주기
+    while (y*y < val) ++y;
+    while ((y-1)*(y-1) >= val) --y;
+    return y;
 }
 
-vector<string> solution(vector<string> expressions) {
-    int n = expressions.size();
-    struct Expr { string A, op, B, C; bool unknown; };
-    vector<Expr> exprs;
-    exprs.reserve(n);
-    // 파싱
-    for (auto &line : expressions) {
-        istringstream iss(line);
-        Expr e;
-        iss >> e.A >> e.op >> e.B;
-        string eq;
-        iss >> eq >> e.C;
-        e.unknown = (e.C == "X");
-        exprs.push_back(e);
+long long solution(int r1, int r2) {
+    ll r1sq = (ll)r1 * r1;
+    ll r2sq = (ll)r2 * r2;
+    ll answer = 0;
+    
+    // x = 0 부터 r2 까지 검사
+    for (int x = 0; x <= r2; ++x) {
+        ll x2 = (ll)x * x;
+        // y^2 >= r1^2 - x^2  그리고  y^2 <= r2^2 - x^2
+        ll lowVal  = r1sq - x2;
+        ll highVal = r2sq - x2;
+        if (highVal < 0) continue;          // 어떤 y도 성립하지 않음
+        ll ymin = isqrt_ceil(lowVal);
+        ll ymax = isqrt_floor(highVal);
+        if (ymax < ymin) continue;
+        
+        ll totalYs = ymax - ymin + 1;
+        bool hasZero = (ymin == 0);
+        
+        // x=0일 때: (0, y)만 고려 → y≠0이면 ±y 두 점, y=0이면 한 점
+        if (x == 0) {
+            // y≠0: totalYs - hasZero 개, 각각 ± 대응 → 2*(totalYs - hasZero)
+            // y=0: hasZero 개 (0 또는 1)
+            answer += 2*(totalYs - hasZero) + (hasZero ? 1 : 0);
+        }
+        else {
+            // x≠0일 때: x, -x 두 축 모두 고려
+            // 각 축에 대해:
+            //   y≠0: (totalYs - hasZero) 개, 각각 ±y → 2*(totalYs - hasZero)
+            //   y=0: hasZero 개 → 1
+            // 축 두 개이므로 위 결과에 ×2
+            ll perAxis = 2*(totalYs - hasZero) + (hasZero ? 1 : 0);
+            answer += perAxis * 2;
+        }
     }
     
-    // 가능한 진법 후보 수집
-    vector<int> bases;
-    for (int b = 2; b <= 9; b++) {
-        bool ok = true;
-        for (auto &e : exprs) {
-            int va = parseInBase(e.A, b);
-            int vb = parseInBase(e.B, b);
-            if (va < 0 || vb < 0) { ok = false; break; }
-            if (e.unknown) {
-                if (e.op == "-" && va < vb) { ok = false; break; }
-            } else {
-                int vc = parseInBase(e.C, b);
-                if (vc < 0) { ok = false; break; }
-                int vr = (e.op == "+" ? va + vb : va - vb);
-                if (vr != vc) { ok = false; break; }
-            }
-        }
-        if (ok) bases.push_back(b);
-    }
-    
-    // 결과 채우기: unknown인 식만, 순서대로
-    vector<string> answer;
-    for (auto &e : exprs) {
-        if (!e.unknown) continue;
-        set<string> results;
-        for (int b : bases) {
-            int va = parseInBase(e.A, b);
-            int vb = parseInBase(e.B, b);
-            int vr = (e.op == "+" ? va + vb : va - vb);
-            results.insert(toBase(vr, b));
-        }
-        string fill = (results.size() == 1 ? *results.begin() : "?");
-        // 원래 식에서 'X' 대신 fill로 치환
-        // "A op B = C"
-        answer.push_back(e.A + " " + e.op + " " + e.B + " = " + fill);
-    }
     return answer;
 }
