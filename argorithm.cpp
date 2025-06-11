@@ -1,29 +1,20 @@
 #include <string>
 #include <vector>
+
 using namespace std;
 
-int solution(int n, int w, int num) {
-    int row = (num - 1) / w;
-    int col = (num - 1) % w;
-    
-    if (row % 2 == 1) {
-        col = w - 1 - col;
-    }
-    
-    int count = 1;
-    
-    for (int i = num + 1; i <= n; i++) {
-        int curr_row = (i - 1) / w;
-        int curr_col = (i - 1) % w;
-        
-        if (curr_row % 2 == 1) {
-            curr_col = w - 1 - curr_col;
+int solution(vector<int> wallet, vector<int> bill) {
+    int w1 = wallet[0], w2 = wallet[1];
+    int b0 = bill[0], b1 = bill[1];
+    int answer = 0;
+    // 지폐가 지갑에 들어갈 때까지 접기
+    while (!((b0 <= w1 && b1 <= w2) || (b1 <= w1 && b0 <= w2))) {
+        if (b0 > b1) {
+            b0 /= 2;
+        } else {
+            b1 /= 2;
         }
-        
-        if (curr_col == col) {
-            count++;
-        }
+        answer++;
     }
-    
-    return count;
+    return answer;
 }
