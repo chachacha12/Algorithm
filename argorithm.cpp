@@ -1,54 +1,36 @@
 #include <string>
 #include <vector>
+
 using namespace std;
 
-long long solution(int cap, int n, vector<int> deliveries, vector<int> pickups) {
-    long long answer = 0;
-    int dPos = n - 1;  // 마지막 배달 필요 집 인덱스 (0-based)
-    int pPos = n - 1;  // 마지막 수거 필요 집 인덱스
-
-    // 포인터를 집 번호 1..n으로 변환하려면 index+1을 사용
-    while (dPos >= 0 || pPos >= 0) {
-        // 다음 배달할 집 찾기
-        while (dPos >= 0 && deliveries[dPos] == 0) {
-            dPos--;
+int solution(vector<int> players, int m, int k) {
+    int answer = 0;
+    // 시간대는 0부터 23까지 총 24시간이며, 최대 만료 시각은 23+k 이므로,
+    // 이에 맞춰 만료 이벤트를 기록할 벡터를 준비합니다.
+    vector<int> expire(24 + k + 1, 0);
+    
+    int active = 0; // 현재 운영중인 서버 수
+    
+    // 0시부터 23시까지 각 시간대에 대해 처리
+    for (int i = 0; i < 24; i++) {
+        // i시가 시작할 때, 만료되어 반납되어야 할 서버들을 active에서 제거
+        active -= expire[i];
+        
+        // 현재 시간대 i의 게임 이용자 수에 따라 필요한 서버 수 계산
+        int required = 0;
+        if (players[i] >= m) {
+            required = players[i] / m;  // 정수 나눗셈: m명 미만은 0, n*m 이상이면 n대 필요
         }
-        // 다음 수거할 집 찾기
-        while (pPos >= 0 && pickups[pPos] == 0) {
-            pPos--;
-        }
-        // 모두 끝나면 종료
-        if (dPos < 0 && pPos < 0) break;
-
-        // 이번 투어에서 갈 가장 먼 집 번호
-        int farthest = max(dPos, pPos) + 1;
-        answer += 2LL * farthest;
-
-        // 이 투어에서 남은 배달·수거 용량
-        int remainDel = cap;
-        int remainPick = cap;
-
-        // 배달 처리 (뒤에서 앞으로)
-        while (remainDel > 0 && dPos >= 0) {
-            if (deliveries[dPos] == 0) {
-                dPos--;
-                continue;
-            }
-            int take = min(deliveries[dPos], remainDel);
-            deliveries[dPos] -= take;
-            remainDel -= take;
-        }
-        // 수거 처리 (뒤에서 앞으로)
-        while (remainPick > 0 && pPos >= 0) {
-            if (pickups[pPos] == 0) {
-                pPos--;
-                continue;
-            }
-            int take = min(pickups[pPos], remainPick);
-            pickups[pPos] -= take;
-            remainPick -= take;
+        
+        // 만약 현재 운영중인 서버가 필요한 수보다 부족하다면 추가 증설
+        if (active < required) {
+            int add = required - active;
+            answer += add;
+            active += add;
+            // i시 증설된 서버는 i+k 시에 반납되므로 만료 이벤트 기록
+            expire[i + k] += add;
         }
     }
-
+    
     return answer;
 }
